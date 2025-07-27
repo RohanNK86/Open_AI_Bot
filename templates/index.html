@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🧿SuperBot</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    
+    <div class="header">
+        <h2>💻SuperBot</h2>
+        <div class="header-controls">
+            <button id="proBtn" class="pro-btn">Upgrade to Pro</button>
+            <button id="historyBtn" class="history-btn">History</button>
+        </div>
+    </div>
+    
+    <div id="historyPanel" class="history-panel hidden">
+        <div class="history-header">
+            <h3>Chat History</h3>
+            <input type="text" id="searchHistory" placeholder="Search history...">
+            <button id="closeHistory">×</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+    </div>
+    
+    <div id="chat"></div>
+    
+    <div class="input-container">
+        <input type="text" id="input" placeholder="Type your message..." autofocus>
+        <label for="fileInput" class="file-btn">📎</label>
+        <input type="file" id="fileInput" style="display: none;">
+        <button id="send">Send</button>
+    </div>
+    
+    <div id="proModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Upgrade to Pro</h3>
+            <p>Get access to GPT-4, unlimited messages, and advanced features!</p>
+            <div class="pro-features">
+                <div class="feature">🚀 GPT-4 Access</div>
+                <div class="feature">💾 Chat History</div>
+                <div class="feature">📎 File Attachments</div>
+                <div class="feature">🔍 Advanced Search</div>
+            </div>
+            <button id="purchasePro" class="purchase-btn">Purchase Pro - $9.99/month</button>
+        </div>
+    </div>
+    
+    <script src="/static/script.js"></script>
+</body>
+</html> 
+
