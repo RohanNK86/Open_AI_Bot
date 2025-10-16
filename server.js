@@ -1,60 +1,96 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const path = require('path');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import rateLimit from 'express-rate-limit';
+import { generateResponse, clearConversationHistory } from './gemini-service.js';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
+// Add this after dotenv.config()
+console.log('Environment variables loaded:', {
+    port: process.env.PORT,
+    hasApiKey: !!process.env.GEMINI_API_KEY,
+    apiKeyStartsWith: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 10) + '...' : 'No API key'
+});
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3001;
 
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(limiter);
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
+// Simple middleware to generate or get user ID
+const getUserId = (req, res, next) => {
+    // In a real app, you'd get this from authentication
+    req.userId = req.headers['x-user-id'] || 'guest';
+    next();
+};
+
+// Routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'index.html'));
+    res.sendFile(path.join(__dirname, 'templates', 'index.html'));
 });
 
-// Simple rule-based chatbot logic
-function getBotReply(message) {
-  const msg = message.toLowerCase();
-  if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('yoo')) {
-    return 'Hello! How can I help you today?';
-  } 
-  else if (msg.includes('how are you')) {
-    return "I'm just a bot, but I'm doing great! What about you?";
-  } 
-  else if (msg.includes('who built you')){
-    return "I was built by a genius student from MS Ramaiah Institute of Technology, His Name is Rohan";
-  } 
-  else if (msg.includes('what all you can do for me')){
-    return "Tell Rohan to feed and add more features to me, so that i can do anything for you!";
-  } 
-  else if (msg.includes('bye')) {
-    return '🙋‍♂️Goodbye! Have a nice day!';
-  } 
-  else if (msg.includes('i am fine')) {
-    return "😊That's great to hear!";
-  } 
-  else if (msg.includes('why you were created') || msg.includes('why you were developed')) {
-    return "😀Soon You'll get to know when i will bring a revolutionary changes!";
-  }
-   else if (msg.includes("who is rohan's gf")) {
-    return "🤫 Alright i will tell about it, She is very cute and beautiful and rohan truly love's her but she doest'nt know about this, I wish she will accept his proposal and marry him, cause he will take care her as a little princes";
-  }
-  else {
-    return `You said: "${message}"`;
-  }
-}
+// API endpoint to get AI response
+app.post('/api/chat', getUserId, async (req, res) => {
+    try {
+        const { message } = req.body;
+        const { userId } = req;
 
-app.post('/api/chat', (req, res) => {
-  const { message } = req.body;
-  if (!message) {
-    return res.status(400).json({ error: 'Message is required.' });
-  }
-  const reply = getBotReply(message);
-  res.json({ reply });
+        if (!message || typeof message !== 'string' || message.trim() === '') {
+            return res.status(400).json({ error: 'Message is required' });
+        }
+
+        const response = await generateResponse(userId, message);
+        res.json({ reply: response });
+    } catch (error) {
+        console.error('Error in chat endpoint:', error);
+        res.status(500).json({ 
+            error: 'Internal server error',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
 });
 
+// Endpoint to clear conversation history
+app.post('/api/clear-history', getUserId, (req, res) => {
+    try {
+        const { userId } = req;
+        clearConversationHistory(userId);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error clearing history:', error);
+        res.status(500).json({ error: 'Failed to clear history' });
+    }
+});
+
+// Simple health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err);
+    res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// Start the server
 app.listen(port, () => {
-  console.log(`Chatbot server running at http://localhost:${port}`);
-}); 
+    console.log(`Server is running on http://localhost:${port}`);
+});

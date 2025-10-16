@@ -35,3 +35,5 @@ Open your browser and go to: `http://127.0.0.1:5000`
 - If you see "Error connecting to server", make sure the Flask server is running
 - If you see API key errors, check that your OPENAI_API_KEY environment variable is set
 - Make sure you have a valid OpenAI API key with sufficient credits 
+
+API Keys = PMAK-68b1e17c48c3cf0001046316-3def08fd2ddcb0f7e357928d75a546e464
