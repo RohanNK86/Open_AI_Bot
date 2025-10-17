@@ -27,13 +27,13 @@ updateProButton();
 function appendMessage(sender, text, isFile = false) {
     const div = document.createElement('div');
     div.className = `bubble ${sender}`;
-    
+
     if (isFile) {
         div.innerHTML = `<span style="font-size: 0.9rem;">📎 ${text}</span>`;
     } else {
         div.textContent = text;
     }
-    
+
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
 }
@@ -60,11 +60,11 @@ function saveToHistory(userMessage, botResponse) {
 
 function displayHistory(searchTerm = '') {
     historyList.innerHTML = '';
-    const filteredHistory = chatHistory.filter(item => 
+    const filteredHistory = chatHistory.filter(item =>
         item.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.bot.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    
+
     filteredHistory.reverse().forEach(item => {
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
@@ -82,16 +82,16 @@ function displayHistory(searchTerm = '') {
 }
 
 // Chat functionality
-send.onclick = async function() {
+send.onclick = async function () {
     const message = input.value.trim();
     if (!message) return;
-    
+
     appendMessage('user', message);
     input.value = '';
     setLoading(true);
-    
+
     try {
-        const res = await fetch('http://localhost:3001/api/chat', {
+        const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message })
@@ -108,7 +108,7 @@ send.onclick = async function() {
 };
 
 // File attachment
-fileInput.onchange = function(e) {
+fileInput.onchange = function (e) {
     const file = e.target.files[0];
     if (file) {
         if (!isPro) {
@@ -123,7 +123,7 @@ fileInput.onchange = function(e) {
 };
 
 // Pro modal
-proBtn.onclick = function() {
+proBtn.onclick = function () {
     if (isPro) {
         alert('You are already a Pro user!');
         return;
@@ -132,19 +132,19 @@ proBtn.onclick = function() {
 };
 
 // Close modal when clicking outside
-proModal.onclick = function(e) {
+proModal.onclick = function (e) {
     if (e.target === proModal) {
         proModal.classList.add('hidden');
     }
 };
 
 // Close button
-document.querySelector('.close').onclick = function() {
+document.querySelector('.close').onclick = function () {
     proModal.classList.add('hidden');
 };
 
 // Purchase Pro (demo)
-purchasePro.onclick = function() {
+purchasePro.onclick = function () {
     alert('This is a demo! In a real app, this would redirect to Stripe for payment.');
     isPro = true;
     localStorage.setItem('isPro', 'true');
@@ -154,7 +154,7 @@ purchasePro.onclick = function() {
 };
 
 // History panel
-historyBtn.onclick = function() {
+historyBtn.onclick = function () {
     if (!isPro) {
         alert('Chat history is only available for Pro users. Please upgrade to Pro.');
         return;
@@ -163,24 +163,24 @@ historyBtn.onclick = function() {
     displayHistory();
 };
 
-closeHistory.onclick = function() {
+closeHistory.onclick = function () {
     historyPanel.classList.add('hidden');
 };
 
 // Close history panel when clicking outside
-historyPanel.onclick = function(e) {
+historyPanel.onclick = function (e) {
     if (e.target === historyPanel) {
         historyPanel.classList.add('hidden');
     }
 };
 
 // Search history
-searchHistory.oninput = function() {
+searchHistory.oninput = function () {
     displayHistory(this.value);
 };
 
 // Keyboard shortcuts
-input.addEventListener('keydown', function(e) {
+input.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
         send.onclick();
     }
