@@ -10,10 +10,10 @@ pip install -r requirements.txt
 ```
 
 ### 2. Set up OpenAI API Key
-1. Get your OpenAI API key from [OpenAI Platform](https://platform.openai.com/api-keys)
+1. Get your Gemini API key from [Gemini API Platform] https://www.google.com/aclk?sa=L&ai=DChsSEwj4h_LqyKuQAxUchUsFHVmTAjYYACICCAEQABoCc2Y&ae=2&co=1&ase=2&gclid=CjwKCAjw0sfHBhB6EiwAQtv5qfPIrdhb97vaXZAXVFhMC2WFJ4cltq--tqtP7CQBxQ0HIKPG6y5SfBoCcNYQAvD_BwE&ei=aGPyaJvwJajuseMP-N_mgQI&cid=CAASlwHkaEqjIBAEiHwS23pvzgo_gdyrdicJiQ0Dl1UjMOqB5gjeykfrif1QU6FDrq0rhOx11mn8Z4VhBISAhIRiw9kBZNSd7DTj_Ja1kqfyCb_gAVPInLU5bZJHCax-Q2GdNC-EE_UW58KMntEctJ56k7dO56e1GpNYrLEfdqK6WhVF2w315sv-9R2pAw5DtjHptoC8Bc74gJht&cce=2&category=acrcp_v1_71&sig=AOD64_0MKL0GEBf4LLB_Kt0C1bB3Q1IHUQ&q&sqi=2&nis=4&adurl&ved=2ahUKEwibxOzqyKuQAxUod2wGHfivOSAQ0Qx6BAgWEAE
 2. Set your API key as an environment variable:
 ```bash
-export OPENAI_API_KEY=your_actual_api_key_here
+export GEMINI_API_KEY=your_actual_api_key_here
 ```
 
 ### 3. Run the Application
