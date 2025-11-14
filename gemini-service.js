@@ -31,7 +31,7 @@ if (!process.env.GEMINI_API_KEY) {
 export async function generateResponse(userId, message) {
     // First, try to use the rule-based response
     const fallbackResponse = getFallbackResponse(message);
-    
+
     // If we don't have a model initialized, return the fallback response
     if (!model) {
         console.log('Gemini model not initialized, using fallback response');
@@ -48,7 +48,7 @@ export async function generateResponse(userId, message) {
         }
 
         const history = conversationHistory.get(userId);
-        
+
         // Add user message to history
         history.push({ role: 'user', parts: [{ text: message }] });
 
@@ -87,25 +87,25 @@ export async function generateResponse(userId, message) {
 
 function getFallbackResponse(message) {
     const msg = message.toLowerCase();
-    
+
     if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('yoo')) {
         return 'Hello! How can I help you today?';
-    } 
+    }
     else if (msg.includes('how are you')) {
         return "I'm just a bot, but I'm doing great! What about you?";
-    } 
+    }
     else if (msg.includes('who built you')) {
         return "I was built by a genius student from MS Ramaiah Institute of Technology, His Name is Rohan";
-    } 
+    }
     else if (msg.includes('what all you can do for me')) {
         return "I can answer your questions, have conversations, and help with various tasks. I'm powered by Google's Gemini AI!";
-    } 
+    }
     else if (msg.includes('bye')) {
         return '🙋‍♂️Goodbye! Have a nice day!';
     }
     else if (msg.includes('i am fine')) {
         return "😊That's great to hear!";
-    } 
+    }
     else if (msg.includes('why you were created') || msg.includes('why you were developed')) {
         return "😀I was created to assist users with their questions and have meaningful conversations. I'm powered by Google's Gemini AI!";
     }

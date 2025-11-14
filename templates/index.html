@@ -52,7 +52,7 @@
 </body>
 </html> 
  -->
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -943,6 +943,1141 @@
                     <p style="color: #718096;">${item.bot.substring(0, 100)}...</p>
                 `;
                 list.appendChild(div);
+            });
+        });
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperBot - AI Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e1e1e1;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        }
+
+        .header {
+            padding: 16px 24px;
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .pro-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pro-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: slideIn 0.4s ease;
+            max-width: 100%;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message.user .avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+
+        .message.bot .avatar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #e1e1e1;
+        }
+
+        .message.bot .message-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #d1d1d1;
+        }
+
+        .attachment-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-top: 8px;
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 14px 18px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: rgba(102, 126, 234, 0.6);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        .input-area {
+            padding: 16px 24px 24px;
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .attachments-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .attachment-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            font-size: 12px;
+            color: #b1b1b1;
+        }
+
+        .attachment-chip .remove {
+            cursor: pointer;
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: rgba(102, 126, 234, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .tool-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .tool-btn {
+            width: 36px;
+            height: 36px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            color: #888;
+        }
+
+        .tool-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #b1b1b1;
+        }
+
+        .input-box {
+            flex: 1;
+        }
+
+        #input {
+            width: 100%;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            color: #e1e1e1;
+            max-height: 120px;
+            line-height: 1.5;
+        }
+
+        #input::placeholder {
+            color: #666;
+        }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a3e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e1e1e1;
+        }
+
+        .modal h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pro-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .feature-card {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .feature-card .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .feature-card h3 {
+            font-size: 13px;
+            color: #b1b1b1;
+        }
+
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .welcome-screen h2 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-screen p {
+            font-size: 15px;
+            color: #888;
+            margin-bottom: 32px;
+        }
+
+        .suggestion-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .suggestion-card {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .suggestion-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+        }
+
+        .suggestion-card .icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-card h3 {
+            font-size: 15px;
+            color: #e1e1e1;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .suggestion-card p {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .modal input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #e1e1e1;
+            font-size: 14px;
+            margin: 16px 0;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal input[type="text"]:focus {
+            border-color: rgba(102, 126, 234, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .modal input[type="text"]::placeholder {
+            color: #666;
+        }
+
+        #historyList {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #historyList::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #historyList::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #historyList::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 16px;
+            }
+
+            .logo h1 {
+                font-size: 16px;
+            }
+
+            .logo-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+            }
+
+            .pro-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .icon-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+
+            .chat-container {
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .message-content {
+                max-width: 85%;
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+
+            .avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+
+            .input-area {
+                padding: 12px 16px 16px;
+            }
+
+            .input-wrapper {
+                padding: 6px;
+            }
+
+            #input {
+                font-size: 15px;
+                padding: 6px 8px;
+            }
+
+            .tool-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            .send-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            .welcome-screen {
+                padding: 24px 16px;
+            }
+
+            .welcome-screen h2 {
+                font-size: 24px;
+            }
+
+            .welcome-screen p {
+                font-size: 14px;
+            }
+
+            .suggestion-cards {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .suggestion-card {
+                padding: 16px;
+            }
+
+            .suggestion-card h3 {
+                font-size: 14px;
+            }
+
+            .suggestion-card p {
+                font-size: 12px;
+            }
+
+            .modal-content {
+                padding: 24px;
+                max-width: 90%;
+            }
+
+            .modal h2 {
+                font-size: 20px;
+            }
+
+            .pro-features {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .feature-card {
+                padding: 14px;
+            }
+
+            .header-controls {
+                gap: 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo h1 {
+                display: none;
+            }
+
+            .pro-btn span {
+                display: none;
+            }
+
+            .pro-btn::after {
+                content: '⭐';
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🤖</div>
+                <h1>SuperBot</h1>
+            </div>
+            <div class="header-controls">
+                <button class="icon-btn" id="historyBtn" title="History">📜</button>
+                <button class="pro-btn" id="proBtn">
+                    <span>⭐ Upgrade Pro</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-container" id="chat">
+            <div class="welcome-screen" id="welcomeScreen">
+                <h2>Welcome to SuperBot 👋</h2>
+                <p>Your AI-powered assistant ready to help with anything you need</p>
+                <div class="suggestion-cards">
+                    <div class="suggestion-card" onclick="sendSuggestion('Explain quantum computing in simple terms')">
+                        <div class="icon">🔬</div>
+                        <h3>Explain Complex Topics</h3>
+                        <p>Get clear explanations of difficult concepts</p>
+                    </div>
+                    <div class="suggestion-card" onclick="sendSuggestion('Write a creative story about space exploration')">
+                        <div class="icon">✍️</div>
+                        <h3>Creative Writing</h3>
+                        <p>Generate stories, poems, and creative content</p>
+                    </div>
+                    <div class="suggestion-card" onclick="sendSuggestion('Help me debug this Python code')">
+                        <div class="icon">💻</div>
+                        <h3>Code Assistance</h3>
+                        <p>Get help with programming and debugging</p>
+                    </div>
+                    <div class="suggestion-card" onclick="sendSuggestion('Plan a 7-day trip to Japan')">
+                        <div class="icon">✈️</div>
+                        <h3>Planning & Organization</h3>
+                        <p>Create plans, schedules, and itineraries</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="attachments-bar" id="attachmentsBar"></div>
+            <div class="input-wrapper">
+                <div class="tool-buttons">
+                    <button class="tool-btn" title="Attach Image" onclick="document.getElementById('imageInput').click()">🖼️</button>
+                    <button class="tool-btn" title="Attach File" onclick="document.getElementById('fileInput').click()">📎</button>
+                    <button class="tool-btn" title="Record Audio" onclick="handleAudio()">🎤</button>
+                </div>
+                <div class="input-box">
+                    <textarea id="input" placeholder="Message SuperBot..." rows="1"></textarea>
+                </div>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="proModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('proModal')">×</button>
+            <h2>Upgrade to Pro</h2>
+            <p style="color: #888; margin: 12px 0;">Unlock premium features and enhance your experience</p>
+            <div class="pro-features">
+                <div class="feature-card">
+                    <div class="icon">🚀</div>
+                    <h3>GPT-4 Access</h3>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">💾</div>
+                    <h3>Chat History</h3>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📁</div>
+                    <h3>File Analysis</h3>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔍</div>
+                    <h3>Advanced Search</h3>
+                </div>
+            </div>
+            <button class="pro-btn" style="width: 100%; justify-content: center;" onclick="purchasePro()">
+                Purchase Pro - $9.99/month
+            </button>
+        </div>
+    </div>
+
+    <div class="modal" id="historyModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <button class="modal-close" onclick="closeModal('historyModal')">×</button>
+            <h2>Chat History</h2>
+            <input type="text" id="searchHistory" placeholder="Search conversations...">
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <input type="file" id="imageInput" accept="image/*" onchange="handleFileUpload(this, 'image')">
+    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.csv,.xlsx" onchange="handleFileUpload(this, 'file')">
+
+    <script>
+        let attachments = [];
+        let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+        let isPro = localStorage.getItem('isPro') === 'true';
+        let isRecording = false;
+
+        function updateProButton() {
+            const proBtn = document.getElementById('proBtn');
+            if (isPro) {
+                proBtn.innerHTML = '<span>⭐ Pro Active</span>';
+                proBtn.style.background = 'rgba(102, 126, 234, 0.2)';
+                proBtn.style.border = '1px solid rgba(102, 126, 234, 0.5)';
+            }
+        }
+
+        updateProButton();
+
+        function sendSuggestion(text) {
+            document.getElementById('input').value = text;
+            sendMessage();
+        }
+
+        function appendMessage(sender, text, attachmentData = null) {
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            if (welcomeScreen) {
+                welcomeScreen.remove();
+            }
+
+            const chat = document.getElementById('chat');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = sender === 'user' ? '👤' : '🤖';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+
+            if (attachmentData) {
+                const attachmentDiv = document.createElement('div');
+                attachmentDiv.className = 'attachment-preview';
+                attachmentDiv.innerHTML = `
+                    <span class="icon">${attachmentData.icon}</span>
+                    <span>${attachmentData.name}</span>
+                `;
+                contentDiv.appendChild(attachmentDiv);
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function showTyping() {
+            const chat = document.getElementById('chat');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typing';
+            typingDiv.innerHTML = `
+                <div class="avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            chat.appendChild(typingDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('input');
+            const message = input.value.trim();
+            
+            if (!message && attachments.length === 0) return;
+            
+            let attachmentData = null;
+            if (attachments.length > 0) {
+                attachmentData = {
+                    icon: attachments[0].icon,
+                    name: attachments[0].name
+                };
+            }
+            
+            appendMessage('user', message || 'Sent an attachment', attachmentData);
+            input.value = '';
+            input.style.height = 'auto';
+            attachments = [];
+            document.getElementById('attachmentsBar').innerHTML = '';
+            
+            showTyping();
+            
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await res.json();
+                hideTyping();
+                const response = data.reply || data.error;
+                appendMessage('bot', response);
+                
+                chatHistory.push({
+                    user: message,
+                    bot: response,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+            } catch (e) {
+                hideTyping();
+                appendMessage('bot', 'Sorry, I encountered an error connecting to the server. Please try again.');
+            }
+        }
+
+        function handleFileUpload(input, type) {
+            const file = input.files[0];
+            if (!file) return;
+
+            if (!isPro && type !== 'image') {
+                alert('File attachments are only available for Pro users. Please upgrade!');
+                input.value = '';
+                return;
+            }
+
+            const icons = {
+                image: '🖼️',
+                file: '📄'
+            };
+
+            attachments.push({
+                name: file.name,
+                type: type,
+                icon: icons[type]
+            });
+
+            displayAttachments();
+            input.value = '';
+        }
+
+        function displayAttachments() {
+            const bar = document.getElementById('attachmentsBar');
+            bar.innerHTML = '';
+            attachments.forEach((att, index) => {
+                const chip = document.createElement('div');
+                chip.className = 'attachment-chip';
+                chip.innerHTML = `
+                    <span>${att.icon}</span>
+                    <span>${att.name}</span>
+                    <span class="remove" onclick="removeAttachment(${index})">×</span>
+                `;
+                bar.appendChild(chip);
+            });
+        }
+
+        function removeAttachment(index) {
+            attachments.splice(index, 1);
+            displayAttachments();
+        }
+
+        function handleAudio() {
+            if (!isPro) {
+                alert('Audio recording is only available for Pro users. Please upgrade!');
+                return;
+            }
+
+            if (!isRecording) {
+                isRecording = true;
+                alert('Recording started! (Demo feature)');
+            } else {
+                isRecording = false;
+                alert('Recording stopped! (Demo feature)');
+            }
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function purchasePro() {
+            alert('This is a demo! In production, this would redirect to payment.');
+            isPro = true;
+            localStorage.setItem('isPro', 'true');
+            updateProButton();
+            closeModal('proModal');
+            appendMessage('bot', '🎉 Welcome to Pro! You now have access to all premium features including GPT-4, file attachments, and chat history.');
+        }
+
+        function displayHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = '';
+            
+            if (chatHistory.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No chat history yet</p>';
+                return;
+            }
+            
+            chatHistory.slice().reverse().forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-card';
+                div.style.marginBottom = '12px';
+                div.innerHTML = `
+                    <h3 style="color: #667eea; margin-bottom: 8px;">${item.user.substring(0, 60)}${item.user.length > 60 ? '...' : ''}</h3>
+                    <p style="color: #888;">${item.bot.substring(0, 100)}${item.bot.length > 100 ? '...' : ''}</p>
+                `;
+                div.onclick = () => {
+                    document.getElementById('input').value = item.user;
+                    closeModal('historyModal');
+                };
+                list.appendChild(div);
+            });
+        }
+
+        document.getElementById('proBtn').onclick = () => {
+            if (isPro) {
+                alert('You are already a Pro user!');
+            } else {
+                openModal('proModal');
+            }
+        };
+
+        document.getElementById('historyBtn').onclick = () => {
+            if (!isPro) {
+                alert('Chat history is only available for Pro users. Please upgrade!');
+                return;
+            }
+            displayHistory();
+            openModal('historyModal');
+        };
+
+        document.getElementById('input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        document.getElementById('input').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        document.getElementById('searchHistory').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const list = document.getElementById('historyList');
+            const filtered = chatHistory.filter(item => 
+                item.user.toLowerCase().includes(searchTerm) ||
+                item.bot.toLowerCase().includes(searchTerm)
+            );
+            
+            list.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No results found</p>';
+                return;
+            }
+            
+            filtered.reverse().forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-card';
+                div.style.marginBottom = '12px';
+                div.innerHTML = `
+                    <h3 style="color: #667eea; margin-bottom: 8px;">${item.user.substring(0, 60)}${item.user.length > 60 ? '...' : ''}</h3>
+                    <p style="color: #888;">${item.bot.substring(0, 100)}${item.bot.length > 100 ? '...' : ''}</p>
+                `;
+                div.onclick = () => {
+                    document.getElementById('input').value = item.user;
+                    closeModal('historyModal');
+                };
+                list.appendChild(div);
+            });
+        });
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
             });
         });
     </script>
