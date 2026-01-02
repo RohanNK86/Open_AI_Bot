@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
 import { generateResponse, clearConversationHistory } from './gemini-service.js';
 import dotenv from 'dotenv';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 // Load environment variables
 dotenv.config();
@@ -33,6 +34,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(limiter);
 app.use('/static', express.static(path.join(__dirname, 'static')));
+
+// Proxy API requests
+const proxyTarget = process.env.PROXY_TARGET || 'http://localhost:3002';
+app.use('/users', createProxyMiddleware({
+    target: proxyTarget,
+    changeOrigin: true,
+}));
 
 // Simple middleware to generate or get user ID
 const getUserId = (req, res, next) => {
