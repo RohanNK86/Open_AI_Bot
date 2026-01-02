@@ -43,6 +43,10 @@ const getUserId = (req, res, next) => {
 
 // Routes
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates', 'login.html'));
+});
+
+app.get('/chatbot', (req, res) => {
     res.sendFile(path.join(__dirname, 'templates', 'index.html'));
 });
 
