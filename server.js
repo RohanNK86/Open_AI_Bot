@@ -37,9 +37,22 @@ app.use('/static', express.static(path.join(__dirname, 'static')));
 
 // Proxy API requests
 const proxyTarget = process.env.PROXY_TARGET || 'http://localhost:3002';
+console.log(`Proxying /users to ${proxyTarget}`);
+
 app.use('/users', createProxyMiddleware({
     target: proxyTarget,
     changeOrigin: true,
+    logLevel: 'debug',
+    onError: (err, req, res) => {
+        console.error('Proxy error:', err);
+        res.writeHead(500, {
+            'Content-Type': 'application/json',
+        });
+        res.end(JSON.stringify({ message: 'Proxy error', error: err.message }));
+    },
+    onProxyRes: (proxyRes, req, res) => {
+        console.log(`Proxy response status: ${proxyRes.statusCode}`);
+    }
 }));
 
 // Simple middleware to generate or get user ID
