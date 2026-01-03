@@ -9,6 +9,7 @@ const { resourceUsage } = require('process');
 // );
 const cors = require('cors');
 const userRouter = require('./routes/userRouter');
+const globalErrorHandler = require('./controller/errorController');
 
 const app = express();
 app.use(cors());
@@ -37,6 +38,8 @@ mongoose.connect(DB)
 
 //Router for the user authentication
 app.use('/users', userRouter);
+
+app.use(globalErrorHandler);
 
 const port = process.env.PORT || 3002
 
