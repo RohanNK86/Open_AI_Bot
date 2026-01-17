@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 
 
 dotenv.config({ path : './.env'});
-const DB = process.env.DATABASE_URL;
+const DB = process.env.DATABASE_URL.replace('<PASSWORD>', process.env.DB_PASSWORD);
 
 if (!DB) {
     console.error('DATABASE_URL is not defined. Please check your .env file.');

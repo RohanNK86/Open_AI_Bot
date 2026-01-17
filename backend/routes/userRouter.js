@@ -4,4 +4,4 @@ const authController = require('./../controller/authController');
 
 router.route('/signIN').post(authController.signIN);
 
-module.exports = router;
+module.exports = router; //middleware for the router 
