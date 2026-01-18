@@ -1,6 +1,6 @@
 # Super ChatBot
 
-A modern web-based chatbot application powered by OpenAI's GPT-3.5-turbo.
+A modern web-based chatbot application powered by GEMINI Flash 2.5 Model.
 
 ## Setup Instructions
 
