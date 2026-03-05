@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
     },
     email : {
         type : String,
-        validate : [validator.isEmail, 'Enter  a valid  email'],
+        validate : [validator.isEmail, 'Enter a valid  email'],
         unique : true
     },
     DOB : {
