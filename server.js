@@ -100,13 +100,16 @@ app.post('/api/chat', getUserId, async (req, res) => {
             return res.status(400).json({ error: 'Message is required' });
         }
 
+        console.log(`Generating response for userId: ${userId}, message: "${message.substring(0, 50)}..."`);
         const response = await generateResponse(userId, message);
+        console.log(`Response generated successfully for userId: ${userId}`);
         res.json({ reply: response });
     } catch (error) {
         console.error('Error in chat endpoint:', error);
         res.status(500).json({
             error: 'Internal server error',
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            message: error.message,
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 });

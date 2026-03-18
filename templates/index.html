@@ -939,7 +939,8 @@
 
     <script>
         const token = localStorage.getItem('token');
-        if (!token) {
+        if (!token || token === 'undefined' || token === 'null') {
+            localStorage.removeItem('token'); // Clear corrupted token
             window.location.href = '/';
         }
 
@@ -1079,7 +1080,8 @@
                 localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
             } catch (e) {
                 hideTyping();
-                appendMessage('bot', 'Sorry, I encountered an error connecting to the server. Please try again.');
+                appendMessage('bot', `Error: ${e.message || 'Connecting to server failed.'}`);
+                console.error('Chat error:', e);
             }
         }
 

@@ -7,8 +7,8 @@ dotenv.config();
 let model;
 try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-    console.log('Successfully initialized Gemini with model: gemini-2.5-flash');
+    model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    console.log('Successfully initialized Gemini with model: gemini-1.5-flash');
 } catch (error) {
     console.error('Failed to initialize Gemini:', error.message);
     console.log('Falling back to rule-based responses only');
