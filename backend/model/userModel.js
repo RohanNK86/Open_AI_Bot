@@ -12,8 +12,7 @@ const userSchema = mongoose.Schema({
         unique : true
     },
     DOB : {
-        type : String,
-        required : [true, 'Please enter your Date of Birth in dd-mm-yy format']
+        type : String
     }
 });
 

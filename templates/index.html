@@ -15,7 +15,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
             background: #0a0a0a;
-            min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,7 +25,7 @@
 
         .container {
             width: 100%;
-            height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -109,6 +109,26 @@
         .pro-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: rgba(255, 69, 58, 0.1);
+            border: 1px solid rgba(255, 69, 58, 0.3);
+            border-radius: 8px;
+            color: #ff453a;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 69, 58, 0.2);
+            transform: translateY(-2px);
         }
 
         .chat-container {
@@ -642,7 +662,7 @@
             }
 
             .input-area {
-                padding: 12px 16px 16px;
+                padding: 12px 16px env(safe-area-inset-bottom, 16px);
             }
 
             .input-wrapper {
@@ -723,12 +743,15 @@
                 display: none;
             }
 
-            .pro-btn span {
+            .pro-btn span, .logout-btn span {
                 display: none;
             }
 
             .pro-btn::after {
                 content: '⭐';
+            }
+            .logout-btn::after {
+                content: '🚪';
             }
         }
     </style>
@@ -817,6 +840,9 @@
                 <button class="icon-btn" id="historyBtn" title="History">📜</button>
                 <button class="pro-btn" id="proBtn">
                     <span>⭐ Upgrade Pro</span>
+                </button>
+                <button class="logout-btn" id="logoutBtn" onclick="logout()">
+                    <span>🚪 Logout</span>
                 </button>
             </div>
         </div>
@@ -912,10 +938,21 @@
         onchange="handleFileUpload(this, 'file')">
 
     <script>
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/';
+        }
+
         let attachments = [];
         let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
         let isPro = localStorage.getItem('isPro') === 'true';
         let isRecording = false;
+
+        // Auto logout if the token is completely expired, or just manually clear it and redirect
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        }
 
         function updateProButton() {
             const proBtn = document.getElementById('proBtn');
@@ -1016,9 +1053,19 @@
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
                     body: JSON.stringify({ message })
                 });
+
+                if (res.status === 401 || res.status === 403) {
+                    // Unauthorized or token expired
+                    logout();
+                    return;
+                }
+
                 const data = await res.json();
                 hideTyping();
                 const response = data.reply || data.error;

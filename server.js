@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import { generateResponse, clearConversationHistory } from './gemini-service.js';
 import dotenv from 'dotenv';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import jwt from 'jsonwebtoken';
 
 // Load environment variables
 dotenv.config();
@@ -32,11 +33,11 @@ const limiter = rateLimit({
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
 app.use(limiter);
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
-// Proxy API requests
+// Proxy API requests (Must be BEFORE body-parser so the stream isn't consumed)
+// Backend (auth) server runs from `backend/app.js` and defaults to port 3001.
 const proxyTarget = process.env.PROXY_TARGET || 'http://localhost:3002';
 console.log(`Proxying /users to ${proxyTarget}`);
 
@@ -44,6 +45,10 @@ app.use('/users', createProxyMiddleware({
     target: proxyTarget,
     changeOrigin: true,
     logLevel: 'debug',
+    // Because this middleware is mounted at `/users`, Express strips that prefix
+    // and the proxy would forward `/signIN` instead of `/users/signIN`.
+    // Re-add the prefix so the backend (mounted at `/users`) receives the right path.
+    pathRewrite: (path) => `/users${path}`,
     onError: (err, req, res) => {
         console.error('Proxy error:', err);
         res.writeHead(500, {
@@ -56,11 +61,24 @@ app.use('/users', createProxyMiddleware({
     }
 }));
 
-// Simple middleware to generate or get user ID
+// Body Parser for other routes
+app.use(bodyParser.json());
+
 const getUserId = (req, res, next) => {
-    // In a real app, you'd get this from authentication
-    req.userId = req.headers['x-user-id'] || 'guest';
-    next();
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized: missing or invalid token' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super-secret-key-for-jwt-that-needs-to-be-long');
+        req.userId = decoded.id;
+        next();
+    } catch (err) {
+        console.error('Invalid token:', err.message);
+        return res.status(401).json({ error: 'Unauthorized: expired or invalid token' });
+    }
 };
 
 // Routes
@@ -86,7 +104,7 @@ app.post('/api/chat', getUserId, async (req, res) => {
         res.json({ reply: response });
     } catch (error) {
         console.error('Error in chat endpoint:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Internal server error',
             details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });

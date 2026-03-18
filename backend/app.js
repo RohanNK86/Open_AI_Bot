@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 });
 
 
-dotenv.config({ path : './.env'});
+dotenv.config({ path: './.env' });
 const DB = process.env.DATABASE_URL.replace('<PASSWORD>', process.env.DB_PASSWORD);
 
 if (!DB) {
@@ -41,7 +41,7 @@ app.use('/users', userRouter);
 
 app.use(globalErrorHandler);
 
-const port = process.env.PORT || 3002
+const port = process.env.PORT || 3002;
 
 app.listen(port, () => {
     console.log(`App running on Port ${port}`)
