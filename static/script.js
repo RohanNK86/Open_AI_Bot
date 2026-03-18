@@ -1,3 +1,9 @@
+// Redirect to login if no token
+const authToken = localStorage.getItem('token');
+if (!authToken) {
+    window.location.href = '/';
+}
+
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 const send = document.getElementById('send');
@@ -93,9 +99,19 @@ send.onclick = async function () {
     try {
         const res = await fetch('/api/chat', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
             body: JSON.stringify({ message })
         });
+
+        // If token is invalid/expired, go back to login
+        if (res.status === 401) {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+            return;
+        }
         const data = await res.json();
         setLoading(false);
         const response = data.reply || data.error;
