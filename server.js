@@ -55,16 +55,27 @@ app.use('/users', createProxyMiddleware({
     target: proxyTarget,
     changeOrigin: true,
     logLevel: 'debug',
+    timeout: 10000,
+    proxyTimeout: 10000,
     // Because this middleware is mounted at `/users`, Express strips that prefix
     // and the proxy would forward `/signIN` instead of `/users/signIN`.
     // Re-add the prefix so the backend (mounted at `/users`) receives the right path.
     pathRewrite: (path) => `/users${path}`,
     onError: (err, req, res) => {
         console.error('Proxy error:', err);
-        res.writeHead(500, {
+        if (res.headersSent) {
+            return;
+        }
+        const isConnRefused = err.code === 'ECONNREFUSED';
+        res.writeHead(isConnRefused ? 503 : 500, {
             'Content-Type': 'application/json',
         });
-        res.end(JSON.stringify({ message: 'Proxy error', error: err.message }));
+        res.end(JSON.stringify({
+            message: isConnRefused
+                ? 'Authentication backend is offline. Start backend server on port 3002.'
+                : 'Proxy error',
+            error: err.message
+        }));
     },
     onProxyRes: (proxyRes, req, res) => {
         console.log(`Proxy response status: ${proxyRes.statusCode}`);

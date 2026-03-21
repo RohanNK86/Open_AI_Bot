@@ -401,6 +401,8 @@
             submitBtn.disabled = true;
 
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
                 const response = await fetch('/users/signIN', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -409,7 +411,9 @@
                         email: emailInput.value.trim(),
                         DOB: dobInput.value
                     }),
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
 
                 let data;
                 const contentType = response.headers.get('content-type') || '';
@@ -439,7 +443,10 @@
                 spinner.style.display = 'none';
                 btnText.style.display = 'block';
                 submitBtn.disabled = false;
-                generalError.textContent = `Connection Refused: ${error.message}`;
+                const errorMessage = error.name === 'AbortError'
+                    ? 'Request timed out. Make sure backend server is running and reachable.'
+                    : error.message;
+                generalError.textContent = `Connection Refused: ${errorMessage}`;
                 generalError.style.display = 'block';
             }
         });

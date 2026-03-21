@@ -3,12 +3,30 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// System prompt to guide the AI's behavior
+const SYSTEM_PROMPT = `You are a helpful AI assistant created by Rohan, a student at MS Ramaiah Institute of Technology. 
+You are talking to a user who is interacting with you through a chat interface. 
+Be friendly, helpful, and concise in your responses.`;
+
 // Initialize Gemini with better error handling
 let model;
+let activeModelName = null;
 try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    console.log('Successfully initialized Gemini with model: gemini-1.5-flash');
+    const candidateModels = [
+        process.env.GEMINI_MODEL,
+        'gemini-2.0-flash',
+        'gemini-1.5-flash-latest',
+        'gemini-1.5-flash'
+    ].filter(Boolean);
+
+    // Pick the first candidate. If runtime API rejects it, we'll fall back in generateResponse.
+    activeModelName = candidateModels[0];
+    model = genAI.getGenerativeModel({
+        model: activeModelName,
+        systemInstruction: SYSTEM_PROMPT
+    });
+    console.log(`Successfully initialized Gemini with model: ${activeModelName}`);
 } catch (error) {
     console.error('Failed to initialize Gemini:', error.message);
     console.log('Falling back to rule-based responses only');
@@ -16,11 +34,6 @@ try {
 
 // Conversation history storage
 const conversationHistory = new Map();
-
-// System prompt to guide the AI's behavior
-const SYSTEM_PROMPT = `You are a helpful AI assistant created by Rohan, a student at MS Ramaiah Institute of Technology. 
-You are talking to a user who is interacting with you through a chat interface. 
-Be friendly, helpful, and concise in your responses.`;
 
 // Add error handling for missing API key
 if (!process.env.GEMINI_API_KEY) {
@@ -39,23 +52,18 @@ export async function generateResponse(userId, message) {
     }
 
     try {
-        // Initialize or get conversation history for this user
+        // Initialize or get conversation history for this user.
+        // Keep it as strict user/model alternation to satisfy Gemini chat requirements.
         if (!conversationHistory.has(userId)) {
-            conversationHistory.set(userId, [
-                { role: 'user', parts: [{ text: SYSTEM_PROMPT }] },
-                { role: 'model', parts: [{ text: 'Hello! I\'m your AI assistant. How can I help you today?' }] }
-            ]);
+            conversationHistory.set(userId, []);
         }
 
         const history = conversationHistory.get(userId);
 
-        // Add user message to history
-        history.push({ role: 'user', parts: [{ text: message }] });
-
         try {
             // Generate response using Gemini
             const chat = model.startChat({
-                history: history.slice(0, -1), // Exclude the current message from history
+                history,
                 generationConfig: {
                     maxOutputTokens: 1000,
                     temperature: 0.7,
@@ -66,17 +74,21 @@ export async function generateResponse(userId, message) {
             const response = await result.response;
             const text = response.text();
 
-            // Add AI response to history
+            // Persist turns after successful completion.
+            history.push({ role: 'user', parts: [{ text: message }] });
             history.push({ role: 'model', parts: [{ text }] });
 
             // Limit history to last 10 messages to manage context size
-            if (history.length > 10) {
-                conversationHistory.set(userId, history.slice(-10));
+            if (history.length > 20) {
+                conversationHistory.set(userId, history.slice(-20));
             }
 
             return text || fallbackResponse; // Return fallback if Gemini returns empty
         } catch (apiError) {
-            console.error('Gemini API Error:', apiError.message);
+            console.error(`Gemini API Error (${activeModelName}):`, apiError.message);
+            // Keep history valid even when Gemini fails.
+            history.push({ role: 'user', parts: [{ text: message }] });
+            history.push({ role: 'model', parts: [{ text: fallbackResponse }] });
             return fallbackResponse;
         }
     } catch (error) {

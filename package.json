@@ -4,8 +4,10 @@
   "description": "Simple Node.js backend for a rule-based chatbot.",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"node server.js\" \"npm run start --prefix backend\"",
-    "dev": "concurrently \"nodemon server.js\" \"npm run dev --prefix backend\""
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "start:full": "concurrently \"node server.js\" \"npm run start --prefix backend\"",
+    "dev:full": "concurrently \"nodemon server.js\" \"npm run dev --prefix backend\""
   },
   "dependencies": {
     "@google/generative-ai": "^0.5.0",
