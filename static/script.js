@@ -112,14 +112,28 @@ send.onclick = async function () {
             window.location.href = '/';
             return;
         }
-        const data = await res.json();
+        let data;
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+            data = await res.json();
+        } else {
+            const text = await res.text();
+            data = {
+                error: text || `Request failed with status ${res.status}`
+            };
+        }
+
+        if (!res.ok) {
+            throw new Error(data.error || data.message || `Request failed with status ${res.status}`);
+        }
+
         setLoading(false);
-        const response = data.reply || data.error;
+        const response = data.reply || data.error || 'Something went wrong.';
         appendMessage('bot', response);
         saveToHistory(message, response);
     } catch (e) {
         setLoading(false);
-        appendMessage('bot', 'Error connecting to server.');
+        appendMessage('bot', e.message || 'Error connecting to server.');
     }
 };
 

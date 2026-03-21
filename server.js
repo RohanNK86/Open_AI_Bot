@@ -28,7 +28,16 @@ const port = process.env.PORT || 3001;
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
+    max: 100, // limit each IP to 100 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+    statusCode: 429,
+    handler: (req, res) => {
+        res.status(429).json({
+            error: 'Too many requests',
+            message: 'Please wait a moment and try again.'
+        });
+    }
 });
 
 // Middleware
