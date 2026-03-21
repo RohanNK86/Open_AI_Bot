@@ -42,7 +42,8 @@ const limiter = rateLimit({
 
 // Middleware
 app.use(cors());
-app.use(limiter);
+// Apply rate limiting only to AI API routes, not login/static/proxy routes.
+app.use('/api', limiter);
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
 // Proxy API requests (Must be BEFORE body-parser so the stream isn't consumed)
