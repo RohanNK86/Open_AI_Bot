@@ -1,7 +1,8 @@
 // Redirect to login if no token
-const authToken = localStorage.getItem('token');
-if (!authToken) {
-    window.location.href = '/';
+const signedInUser = localStorage.getItem('nexoraiUser');
+// Temporarily disabled to allow access without login
+if (!signedInUser) {
+    window.location.href = '/login';
 }
 
 const chat = document.getElementById('chat');
@@ -20,11 +21,11 @@ const purchasePro = document.getElementById('purchasePro');
 
 // Chat history storage
 let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
-let isPro = localStorage.getItem('isPro') === 'true';
+let isPro = false;
 
 // Update Pro button text
 function updateProButton() {
-    proBtn.textContent = isPro ? 'Pro User ✓' : 'Upgrade to Pro';
+    proBtn.textContent = isPro ? 'Pro User Ã¢Å“â€œ' : 'Upgrade to Pro';
     proBtn.style.background = isPro ? '#28a745' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
 }
 
@@ -35,7 +36,7 @@ function appendMessage(sender, text, isFile = false) {
     div.className = `bubble ${sender}`;
 
     if (isFile) {
-        div.innerHTML = `<span style="font-size: 0.9rem;">📎 ${text}</span>`;
+        div.innerHTML = `<span style="font-size: 0.9rem;">Ã°Å¸â€œÅ½ ${text}</span>`;
     } else {
         div.textContent = text;
     }
@@ -101,16 +102,13 @@ send.onclick = async function () {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify({ message })
         });
 
         // If token is invalid/expired, go back to login
         if (res.status === 401) {
-            localStorage.removeItem('token');
-            window.location.href = '/';
-            return;
+            window.location.href = '/login';
         }
         let data;
         const contentType = res.headers.get('content-type') || '';
@@ -175,20 +173,12 @@ document.querySelector('.close').onclick = function () {
 
 // Purchase Pro (demo)
 purchasePro.onclick = function () {
-    alert('This is a demo! In a real app, this would redirect to Stripe for payment.');
-    isPro = true;
-    localStorage.setItem('isPro', 'true');
-    updateProButton();
     proModal.classList.add('hidden');
-    appendMessage('bot', 'Welcome to Pro! You now have access to GPT-4, file attachments, and advanced features.');
+    appendMessage('bot', 'Premium plans are coming soon. Core chat and workspace features are available now.');
 };
 
 // History panel
 historyBtn.onclick = function () {
-    if (!isPro) {
-        alert('Chat history is only available for Pro users. Please upgrade to Pro.');
-        return;
-    }
     historyPanel.classList.remove('hidden');
     displayHistory();
 };

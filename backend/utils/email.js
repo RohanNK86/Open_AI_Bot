@@ -7,31 +7,31 @@ const sendWelcomeEmail = async (options) => {
     const transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST || 'sandbox.smtp.mailtrap.io',
         port: Number(process.env.EMAIL_PORT) || 587,
-        secure: false, // false = STARTTLS (required for port 587 on Mailtrap)
+        secure: process.env.EMAIL_SECURE === 'true',
         auth: {
-            user: "e1e42963e43aa8",//process.env.EMAIL_USERNAME,
-            pass: "afa094bd81ebd8",//process.env.EMAIL_PASSWORD
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD
         },
         tls: {
-            rejectUnauthorized: false // allow self-signed certs in dev
+            rejectUnauthorized: process.env.NODE_ENV === 'production'
         }
     });
 
     // 2) Define the email options
     const mailOptions = {
-        from: 'Super Bot Assistant Team <hello@superbot.com>',
+        from: 'NexorAI Assistant Team <hello@nexorai.com>',
         to: options.email,
-        subject: 'Welcome to Super Bot Assistant!',
-        text: `from team Super Bot Assistant thank you for creating account with super bot`,
+        subject: 'Welcome to NexorAI Assistant!',
+        text: `from team NexorAI Assistant thank you for creating an account with NexorAI`,
         html: `
             <div style="font-family: Arial, sans-serif; text-align: center; color: #333;">
-                <h2>Welcome to Super Bot Assistant! 🤖</h2>
+                <h2>Welcome to NexorAI Assistant! 🤖</h2>
                 <p>Hi ${options.name},</p>
-                <p>from team Super Bot Assistant thank you for creating account with super bot.</p>
+                <p>From the NexorAI Assistant team, thank you for creating an account with NexorAI.</p>
                 <p>We are excited to have you on board. Start chatting and exploring the AI capabilities!</p>
                 <br>
                 <p>Best Regards,</p>
-                <p><strong>Super Bot Team</strong></p>
+                <p><strong>NexorAI Team</strong></p>
             </div>
         `
     };

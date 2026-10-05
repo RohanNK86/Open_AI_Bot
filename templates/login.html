@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Bot AI - Assistant Login</title>
+    <title>NexorAI - Assistant Login</title>
     <style>
         * {
             margin: 0;
@@ -275,6 +275,31 @@
             justify-content: center;
             gap: 10px;
         }
+
+        .auth-switch {
+            display: flex;
+            gap: 8px;
+            margin: 0 0 24px;
+            padding: 5px;
+            border: 1px solid rgba(31, 174, 239, 0.35);
+            border-radius: 12px;
+        }
+
+        .auth-switch button {
+            flex: 1;
+            border: 0;
+            border-radius: 8px;
+            padding: 11px;
+            color: #aebbd0;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .auth-switch button.active {
+            color: #fff;
+            background: linear-gradient(135deg, #16a9e5, #7656eb);
+        }
     </style>
 </head>
 
@@ -287,11 +312,19 @@
 
     <div class="container">
         <div class="logo">
-            <h1>Super Bot AI</h1>
+            <h1>NexorAI</h1>
             <p>Enter the next generation of Intelligence</p>
         </div>
 
         <form id="loginForm">
+            <div class="auth-switch" role="tablist" aria-label="Authentication mode">
+                <button type="button" id="loginTab" class="active">Login</button>
+                <button type="button" id="signupTab">Sign Up</button>
+            </div>
+            <p id="authHint" style="text-align: center; color: #aebbd0; margin: -12px 0 20px;">
+                Already have an account? Enter your email and password.
+            </p>
+
             <div class="form-group">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" placeholder="Enter your full name" required minlength="2">
@@ -305,6 +338,12 @@
             </div>
 
             <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="At least 8 characters" required minlength="8">
+                <span class="error-message" id="passwordError">Use at least 8 characters</span>
+            </div>
+
+            <div class="form-group">
                 <label for="dob">Date of Birth</label>
                 <input type="date" id="dob" name="dob" required>
                 <span class="error-message" id="dobError">Please enter a valid Date of Birth</span>
@@ -312,7 +351,7 @@
 
             <button type="submit" class="btn-submit">
                 <div class="btn-content">
-                    <span class="btn-text">Initialize Connection</span>
+                    <span class="btn-text">Login</span>
                     <div class="spinner"></div>
                 </div>
             </button>
@@ -329,7 +368,7 @@
 
     <script>
         // Redirect if already logged in
-        if (localStorage.getItem('token')) {
+        if (localStorage.getItem('nexoraiUser')) {
             window.location.href = '/chatbot';
         }
 
@@ -343,7 +382,7 @@
             'if (user.connected) { syncData(); }',
             'export const AIEngine = new TransformerModel();',
             'byte[] payload = secureEncrypt(data, AES_256);',
-            'import { DeepLearning } from "@superbot/core";'
+            'import { DeepLearning } from "@nexorai/core";'
         ];
 
         for (let i = 0; i < 50; i++) {
@@ -370,19 +409,47 @@
         const form = document.getElementById('loginForm');
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
         const dobInput = document.getElementById('dob');
         const submitBtn = form.querySelector('.btn-submit');
         const spinner = form.querySelector('.spinner');
         const btnText = form.querySelector('.btn-text');
         const successMessage = document.getElementById('successMessage');
         const generalError = document.getElementById('generalError');
+        const authHint = document.getElementById('authHint');
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        let authMode = 'login';
+
+        function setAuthMode(mode) {
+            authMode = mode;
+            const isSignup = mode === 'signup';
+            loginTab.classList.toggle('active', !isSignup);
+            signupTab.classList.toggle('active', isSignup);
+            nameInput.closest('.form-group').style.display = isSignup ? 'block' : 'none';
+            dobInput.closest('.form-group').style.display = isSignup ? 'block' : 'none';
+            nameInput.required = isSignup;
+            dobInput.required = isSignup;
+            btnText.textContent = isSignup ? 'Create Account' : 'Login';
+            authHint.textContent = isSignup
+                ? 'New to NexorAI? Create your account in the Login collection.'
+                : 'Already have an account? Enter your email and password.';
+            successMessage.textContent = isSignup
+                ? '✓ Account created! Redirecting to NexorAI...'
+                : '✓ Login successful! Redirecting to NexorAI...';
+            generalError.style.display = 'none';
+        }
+
+        loginTab.addEventListener('click', () => setAuthMode('login'));
+        signupTab.addEventListener('click', () => setAuthMode('signup'));
+        setAuthMode('login');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             document.querySelectorAll('.error-message').forEach(msg => msg.style.display = 'none');
 
             let isValid = true;
-            if (nameInput.value.trim().length < 2) {
+            if (authMode === 'signup' && nameInput.value.trim().length < 2) {
                 document.getElementById('nameError').style.display = 'block';
                 isValid = false;
             }
@@ -390,7 +457,11 @@
                 document.getElementById('emailError').style.display = 'block';
                 isValid = false;
             }
-            if (!dobInput.value) {
+            if (passwordInput.value.length < 8) {
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+            if (authMode === 'signup' && !dobInput.value) {
                 document.getElementById('dobError').style.display = 'block';
                 isValid = false;
             }
@@ -401,19 +472,21 @@
             submitBtn.disabled = true;
 
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 12000);
-                const response = await fetch('/users/signIN', {
+                const response = await fetch(`/users/${authMode === 'signup' ? 'signup' : 'login'}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: nameInput.value.trim(),
-                        email: emailInput.value.trim(),
-                        DOB: dobInput.value
-                    }),
-                    signal: controller.signal
+                    body: JSON.stringify(authMode === 'signup'
+                        ? {
+                            name: nameInput.value.trim(),
+                            email: emailInput.value.trim(),
+                            password: passwordInput.value,
+                            DOB: dobInput.value
+                        }
+                        : {
+                            email: emailInput.value.trim(),
+                            password: passwordInput.value
+                        })
                 });
-                clearTimeout(timeoutId);
 
                 let data;
                 const contentType = response.headers.get('content-type') || '';
@@ -428,7 +501,7 @@
                     throw new Error(data.message || 'Authentication Failed');
                 }
 
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('nexoraiUser', JSON.stringify(data.data.user));
 
                 spinner.style.display = 'none';
                 btnText.textContent = 'Access Granted!';
@@ -443,10 +516,7 @@
                 spinner.style.display = 'none';
                 btnText.style.display = 'block';
                 submitBtn.disabled = false;
-                const errorMessage = error.name === 'AbortError'
-                    ? 'Request timed out. Make sure backend server is running and reachable.'
-                    : error.message;
-                generalError.textContent = `Connection Refused: ${errorMessage}`;
+                generalError.textContent = error.message || 'Authentication service is currently unavailable.';
                 generalError.style.display = 'block';
             }
         });

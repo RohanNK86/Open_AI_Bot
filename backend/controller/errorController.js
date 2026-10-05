@@ -1,6 +1,6 @@
 const handleDuplicateKeyError = (err, res) => {
-    const field = Object.keys(err.keyValue)[0];
-    const value = err.keyValue[field];
+    const field = err.keyValue ? Object.keys(err.keyValue)[0] : 'value';
+    const value = err.keyValue ? err.keyValue[field] : 'provided';
     const message = `Duplicate field value: ${field} - ${value}. Please use another value.`;
     res.status(409).json({
         status: 'fail',

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperBot - AI Assistant</title>
+    <title>NexorAI - Premium AI</title>
+    <!-- Use Inter font for a sleek, premium look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,36 +14,33 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
-            background: #0a0a0a;
-            min-height: 100dvh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ECECEC;
+            height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            color: #e1e1e1;
             overflow: hidden;
         }
 
         .container {
             width: 100%;
-            height: 100dvh;
+            max-width: 1200px;
             display: flex;
             flex-direction: column;
+            height: 100%;
             position: relative;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
         }
 
         .header {
-            padding: 16px 24px;
-            background: rgba(15, 15, 15, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 10;
         }
 
         .logo {
@@ -51,129 +49,150 @@
             gap: 12px;
         }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
         }
 
         .logo h1 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: 0.5px;
+            color: #fff;
         }
 
         .header-controls {
             display: flex;
-            gap: 8px;
+            gap: 12px;
             align-items: center;
         }
 
-        .icon-btn {
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+        button {
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .icon-btn, .pro-btn, .logout-btn {
+            background: transparent;
+            color: #A3A3A3;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.2s;
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
+            gap: 6px;
         }
 
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(102, 126, 234, 0.5);
-            transform: translateY(-2px);
+        .icon-btn:hover, .logout-btn:hover {
+            background: #1A1A1A;
+            color: #FFF;
         }
 
         .pro-btn {
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            background: #FFFFFF;
+            color: #000000;
+            font-weight: 500;
         }
 
         .pro-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-        }
-
-        .logout-btn {
-            padding: 8px 16px;
-            background: rgba(255, 69, 58, 0.1);
-            border: 1px solid rgba(255, 69, 58, 0.3);
-            border-radius: 8px;
-            color: #ff453a;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 69, 58, 0.2);
-            transform: translateY(-2px);
+            opacity: 0.9;
         }
 
         .chat-container {
             flex: 1;
             overflow-y: auto;
-            padding: 24px;
+            padding: 40px 15%;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 32px;
+            scroll-behavior: smooth;
         }
 
         .chat-container::-webkit-scrollbar {
             width: 6px;
         }
 
-        .chat-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
         .chat-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
+            background: #333;
             border-radius: 3px;
         }
 
-        .chat-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .welcome-screen {
+            text-align: center;
+            margin-top: 8vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .welcome-screen h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .welcome-screen p {
+            color: #A3A3A3;
+            margin-bottom: 48px;
+            font-size: 15px;
+        }
+
+        .suggestion-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            text-align: left;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .suggestion-card {
+            background: #111111;
+            border: 1px solid #222222;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .suggestion-card:hover {
+            background: #1A1A1A;
+            border-color: #333;
+        }
+
+        .suggestion-card .icon {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-card h3 {
+            font-size: 14px;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #eee;
+        }
+
+        .suggestion-card p {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.4;
         }
 
         .message {
             display: flex;
-            gap: 12px;
-            animation: slideIn 0.4s ease;
-            max-width: 100%;
+            gap: 16px;
+            animation: fadeIn 0.3s ease;
+            width: 100%;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.user {
@@ -188,97 +207,112 @@
             align-items: center;
             justify-content: center;
             font-size: 16px;
+            background: #111;
+            border: 1px solid #333;
             flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .message.user .avatar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-        }
-
-        .message.bot .avatar {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border: none;
         }
 
         .message-content {
-            max-width: 70%;
-            padding: 14px 18px;
-            border-radius: 16px;
-            font-size: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 75%;
+            font-size: 15px;
             line-height: 1.6;
             word-wrap: break-word;
-            position: relative;
         }
 
         .message.user .message-content {
-            background: rgba(102, 126, 234, 0.15);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            color: #e1e1e1;
+            background: #2A2A2A;
+            color: #FFF;
         }
 
         .message.bot .message-content {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #d1d1d1;
-        }
-
-        .attachment-preview {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            margin-top: 8px;
-            font-size: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .typing-indicator {
-            display: flex;
-            gap: 4px;
-            padding: 14px 18px;
-        }
-
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background: rgba(102, 126, 234, 0.6);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-
-            0%,
-            60%,
-            100% {
-                transform: translateY(0);
-                opacity: 0.4;
-            }
-
-            30% {
-                transform: translateY(-10px);
-                opacity: 1;
-            }
+            background: transparent;
+            color: #E5E5E5;
+            padding: 4px 0;
         }
 
         .input-area {
-            padding: 16px 24px 24px;
-            background: rgba(15, 15, 15, 0.8);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 24px 15%;
+            padding-bottom: 40px;
+            background: linear-gradient(180deg, transparent, #000 20%);
+        }
+
+        .input-wrapper {
+            background: #1A1A1A;
+            border: 1px solid #333;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            gap: 12px;
+            transition: 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #555;
+            background: #222;
+        }
+
+        .tool-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .tool-btn {
+            background: transparent;
+            font-size: 18px;
+            color: #888;
+            padding: 6px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tool-btn:hover {
+            color: #FFF;
+            background: #2A2A2A;
+        }
+
+        .input-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        #input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #FFF;
+            font-size: 15px;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+            max-height: 120px;
+            padding: 4px 0;
+        }
+
+        #input::placeholder {
+            color: #666;
+        }
+
+        .send-btn {
+            background: #FFF;
+            color: #000;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            opacity: 0.8;
         }
 
         .attachments-bar {
@@ -289,128 +323,57 @@
         }
 
         .attachment-chip {
+            background: #222;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            font-size: 12px;
-            color: #b1b1b1;
+            border: 1px solid #333;
         }
 
         .attachment-chip .remove {
+            color: #FF5555;
             cursor: pointer;
-            color: #ff6b6b;
-            font-weight: bold;
-            font-size: 16px;
-            line-height: 1;
-        }
-
-        .input-wrapper {
-            display: flex;
-            gap: 8px;
-            align-items: flex-end;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: rgba(102, 126, 234, 0.5);
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .tool-buttons {
-            display: flex;
-            gap: 4px;
-        }
-
-        .tool-btn {
-            width: 36px;
-            height: 36px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.2s ease;
-            color: #888;
-        }
-
-        .tool-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #b1b1b1;
-        }
-
-        .input-box {
-            flex: 1;
-        }
-
-        #input {
-            width: 100%;
-            padding: 8px 12px;
-            border: none;
-            background: transparent;
             font-size: 14px;
-            font-family: inherit;
-            resize: none;
-            outline: none;
-            color: #e1e1e1;
-            max-height: 120px;
-            line-height: 1.5;
+            font-weight: bold;
         }
 
-        #input::placeholder {
-            color: #666;
-        }
-
-        .send-btn {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .typing-indicator {
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            padding: 8px 0;
         }
 
-        .send-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #888;
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: bounce 1.4s infinite;
         }
 
-        .send-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
         }
 
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            z-index: 100;
             align-items: center;
             justify-content: center;
-            padding: 20px;
         }
 
         .modal.active {
@@ -418,438 +381,169 @@
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a3e 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            background: #111;
+            border: 1px solid #333;
             padding: 32px;
-            max-width: 500px;
-            width: 100%;
+            border-radius: 16px;
+            width: 400px;
+            max-width: 90%;
             position: relative;
-            animation: modalSlideIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         .modal-close {
             position: absolute;
             top: 16px;
             right: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            font-size: 20px;
-            cursor: pointer;
+            background: transparent;
+            font-size: 24px;
             color: #888;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
         }
 
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #e1e1e1;
+            color: #FFF;
         }
 
         .modal h2 {
-            font-size: 24px;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: #fff;
         }
 
         .pro-features {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin: 24px 0;
         }
 
         .feature-card {
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(102, 126, 234, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .feature-card .icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .feature-card h3 {
-            font-size: 13px;
-            color: #b1b1b1;
-        }
-
-        .welcome-screen {
-            flex: 1;
+            background: #1A1A1A;
+            padding: 12px 16px;
+            border-radius: 8px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 32px;
-            text-align: center;
-        }
-
-        .welcome-screen h2 {
-            font-size: 32px;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .welcome-screen p {
-            font-size: 15px;
-            color: #888;
-            margin-bottom: 32px;
-        }
-
-        .suggestion-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 12px;
-            width: 100%;
-            max-width: 900px;
-        }
-
-        .suggestion-card {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-        }
-
-        .suggestion-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(102, 126, 234, 0.5);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
-        }
-
-        .suggestion-card .icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .suggestion-card h3 {
-            font-size: 15px;
-            color: #e1e1e1;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        .suggestion-card p {
-            font-size: 13px;
-            color: #888;
-            line-height: 1.5;
+            font-size: 14px;
+            border: 1px solid #222;
         }
 
         input[type="file"] {
             display: none;
         }
 
-        .modal input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: #e1e1e1;
-            font-size: 14px;
-            margin: 16px 0;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .modal input[type="text"]:focus {
-            border-color: rgba(102, 126, 234, 0.5);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .modal input[type="text"]::placeholder {
-            color: #666;
-        }
-
         #historyList {
-            max-height: 400px;
+            max-height: 300px;
             overflow-y: auto;
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        #historyList::-webkit-scrollbar {
-            width: 6px;
-        }
+        #historyList::-webkit-scrollbar { width: 6px; }
+        #historyList::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
 
-        #historyList::-webkit-scrollbar-track {
-            background: transparent;
+        .history-item {
+            background: #1A1A1A;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #222;
         }
+        .history-item:hover { background: #222; }
+        .history-item h3 { font-size: 13px; color: #fff; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .history-item p { font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 
-        #historyList::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
+        .search-box {
+            width: 100%;
+            background: #1A1A1A;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            outline: none;
         }
+        .search-box:focus { border-color: #555; }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .header {
-                padding: 12px 16px;
-            }
-
-            .logo h1 {
-                font-size: 16px;
-            }
-
-            .logo-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 18px;
-            }
-
-            .pro-btn {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-
-            .icon-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 14px;
-            }
-
-            .chat-container {
-                padding: 16px;
-                gap: 12px;
-            }
-
-            .message-content {
-                max-width: 85%;
-                padding: 12px 14px;
-                font-size: 13px;
-            }
-
-            .avatar {
-                width: 28px;
-                height: 28px;
-                font-size: 14px;
-            }
-
-            .input-area {
-                padding: 12px 16px env(safe-area-inset-bottom, 16px);
-            }
-
-            .input-wrapper {
-                padding: 6px;
-            }
-
-            #input {
-                font-size: 15px;
-                padding: 6px 8px;
-            }
-
-            .tool-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 16px;
-            }
-
-            .send-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 16px;
-            }
-
-            .welcome-screen {
-                padding: 24px 16px;
-            }
-
-            .welcome-screen h2 {
-                font-size: 24px;
-            }
-
-            .welcome-screen p {
-                font-size: 14px;
-            }
-
-            .suggestion-cards {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .suggestion-card {
-                padding: 16px;
-            }
-
-            .suggestion-card h3 {
-                font-size: 14px;
-            }
-
-            .suggestion-card p {
-                font-size: 12px;
-            }
-
-            .modal-content {
-                padding: 24px;
-                max-width: 90%;
-            }
-
-            .modal h2 {
-                font-size: 20px;
-            }
-
-            .pro-features {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .feature-card {
-                padding: 14px;
-            }
-
-            .header-controls {
-                gap: 6px;
-            }
+            .chat-container, .input-area { padding-left: 20px; padding-right: 20px; }
+            .suggestion-cards { grid-template-columns: 1fr; }
+            .header { padding: 12px 16px; }
+            .logo h1 { font-size: 16px; }
         }
 
-        @media (max-width: 480px) {
-            .logo h1 {
-                display: none;
-            }
-
-            .pro-btn span, .logout-btn span {
-                display: none;
-            }
-
-            .pro-btn::after {
-                content: '⭐';
-            }
-            .logout-btn::after {
-                content: '🚪';
-            }
-        }
+        /* Light Theme Overrides */
+        body.light-theme { background: #FFFFFF; color: #0D0D0D; }
+        .light-theme .container { background: #FFFFFF; }
+        .light-theme .header { background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+        .light-theme .logo h1 { color: #000000; }
+        .light-theme .logo-icon svg path { fill: #000000; }
+        .light-theme .icon-btn, .light-theme .logout-btn { color: #555555; }
+        .light-theme .icon-btn:hover, .light-theme .logout-btn:hover { background: #E5E5E5; color: #000000; }
+        .light-theme .pro-btn { background: #000000; color: #FFFFFF; }
+        .light-theme .pro-btn:hover { opacity: 0.8; }
+        .light-theme .welcome-screen h2 { color: #000000; }
+        .light-theme .welcome-screen p { color: #555555; }
+        .light-theme .suggestion-card { background: #FFFFFF; border: 1px solid #E5E5E5; }
+        .light-theme .suggestion-card:hover { background: #F9F9F9; border-color: #CCCCCC; }
+        .light-theme .suggestion-card h3 { color: #111111; }
+        .light-theme .suggestion-card p { color: #666666; }
+        .light-theme .avatar { background: #FFFFFF; border: 1px solid #E5E5E5; color: #000000; }
+        .light-theme .message.user .message-content { background: #F4F4F4; color: #0D0D0D; }
+        .light-theme .message.bot .message-content { color: #0D0D0D; }
+        .light-theme .input-area { background: linear-gradient(180deg, transparent, #FFFFFF 20%); }
+        .light-theme .input-wrapper { background: #F4F4F4; border: 1px solid #E5E5E5; }
+        .light-theme .input-wrapper:focus-within { border-color: #CCCCCC; background: #FFFFFF; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        .light-theme .tool-btn { color: #666666; }
+        .light-theme .tool-btn:hover { color: #000000; background: #E5E5E5; }
+        .light-theme #input { color: #000000; }
+        .light-theme #input::placeholder { color: #999999; }
+        .light-theme .send-btn { background: #000000; color: #FFFFFF; }
+        .light-theme .attachment-chip { background: #F4F4F4; border: 1px solid #E5E5E5; color: #333333; }
+        .light-theme .modal { background: rgba(255, 255, 255, 0.8); }
+        .light-theme .modal-content { background: #FFFFFF; border: 1px solid #E5E5E5; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .light-theme .modal h2 { color: #000000; }
+        .light-theme .feature-card { background: #F9F9F9; border: 1px solid #E5E5E5; color: #333333; }
+        .light-theme .history-item { background: #F9F9F9; border: 1px solid #E5E5E5; }
+        .light-theme .history-item:hover { background: #F0F0F0; }
+        .light-theme .history-item h3 { color: #111111; }
+        .light-theme .search-box { background: #FFFFFF; border: 1px solid #E5E5E5; color: #000000; }
+        .light-theme .chat-container::-webkit-scrollbar-thumb { background: #CCCCCC; }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">
                 <div class="logo-icon">
-                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Background circle with gradient -->
-                        <defs>
-                            <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-                                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#d946ef;stop-opacity:1" />
-                            </linearGradient>
-
-                            <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
-                            </linearGradient>
-
-                            <!-- Glow effect -->
-                            <filter id="glow">
-                                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur" />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                        </defs>
-
-                        <!-- Main background circle -->
-                        <circle cx="100" cy="100" r="90" fill="url(#bgGrad)" />
-
-                        <!-- Robot head outline (hexagonal shape for "super" tech feel) -->
-                        <path d="M 100 35 L 130 50 L 130 80 L 100 95 L 70 80 L 70 50 Z" fill="#ffffff" opacity="0.95" />
-
-                        <!-- Eyes (powerful and focused) -->
-                        <circle cx="85" cy="60" r="8" fill="url(#bgGrad)" />
-                        <circle cx="115" cy="60" r="8" fill="url(#bgGrad)" />
-
-                        <!-- Eye highlights -->
-                        <circle cx="87" cy="58" r="3" fill="#fbbf24" />
-                        <circle cx="117" cy="58" r="3" fill="#fbbf24" />
-
-                        <!-- Antenna (superhero cape-like element) -->
-                        <rect x="97" y="20" width="6" height="15" fill="#fbbf24" rx="3" />
-                        <circle cx="100" cy="18" r="5" fill="url(#accentGrad)" filter="url(#glow)" />
-
-                        <!-- Power symbol / mouth area -->
-                        <path d="M 90 72 Q 100 77 110 72" stroke="#8b5cf6" stroke-width="3" fill="none"
-                            stroke-linecap="round" />
-
-                        <!-- Body - superhero chest emblem style -->
-                        <path d="M 75 95 L 100 105 L 125 95 L 125 140 L 100 150 L 75 140 Z" fill="#ffffff"
-                            opacity="0.95" />
-
-                        <!-- S-shaped power emblem on chest -->
-                        <text x="100" y="133" font-family="Arial, sans-serif" font-size="38" font-weight="bold"
-                            fill="url(#bgGrad)" text-anchor="middle">S</text>
-
-                        <!-- Arms (strong and capable) -->
-                        <rect x="55" y="100" width="15" height="35" rx="7" fill="#ffffff" opacity="0.9" />
-                        <rect x="130" y="100" width="15" height="35" rx="7" fill="#ffffff" opacity="0.9" />
-
-                        <!-- Energy rings (showing all-in-one capability) -->
-                        <circle cx="100" cy="100" r="85" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.3"
-                            stroke-dasharray="5,5">
-                            <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100"
-                                dur="20s" repeatCount="indefinite" />
-                        </circle>
-
-                        <circle cx="100" cy="100" r="78" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.2"
-                            stroke-dasharray="5,5">
-                            <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100"
-                                dur="15s" repeatCount="indefinite" />
-                        </circle>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="white"/>
                     </svg>
                 </div>
-                <h1>SuperBot</h1>
+                <h1>NexorAI</h1>
             </div>
             <div class="header-controls">
-                <button class="icon-btn" id="historyBtn" title="History">📜</button>
+                <button class="icon-btn" id="themeBtn" title="Toggle Theme" onclick="toggleTheme()">
+                    <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+                <button class="icon-btn" id="historyBtn" title="History">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </button>
                 <button class="pro-btn" id="proBtn">
-                    <span>⭐ Upgrade Pro</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>Upgrade Pro</span>
                 </button>
                 <button class="logout-btn" id="logoutBtn" onclick="logout()">
-                    <span>🚪 Logout</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
+                    <span>Logout</span>
                 </button>
             </div>
         </div>
 
         <div class="chat-container" id="chat">
             <div class="welcome-screen" id="welcomeScreen">
-                <h2>Welcome to SuperBot 👋</h2>
+                <h2>Welcome to NexorAI 👋</h2>
                 <p>Your AI-powered assistant ready to help with anything you need</p>
                 <div class="suggestion-cards">
                     <div class="suggestion-card" onclick="sendSuggestion('Explain quantum computing in simple terms')">
@@ -857,8 +551,7 @@
                         <h3>Explain Complex Topics</h3>
                         <p>Get clear explanations of difficult concepts</p>
                     </div>
-                    <div class="suggestion-card"
-                        onclick="sendSuggestion('Write a creative story about space exploration')">
+                    <div class="suggestion-card" onclick="sendSuggestion('Write a creative story about space exploration')">
                         <div class="icon">✍️</div>
                         <h3>Creative Writing</h3>
                         <p>Generate stories, poems, and creative content</p>
@@ -881,89 +574,105 @@
             <div class="attachments-bar" id="attachmentsBar"></div>
             <div class="input-wrapper">
                 <div class="tool-buttons">
-                    <button class="tool-btn" title="Attach Image"
-                        onclick="document.getElementById('imageInput').click()">🖼️</button>
-                    <button class="tool-btn" title="Attach File"
-                        onclick="document.getElementById('fileInput').click()">📎</button>
-                    <button class="tool-btn" title="Record Audio" onclick="handleAudio()">🎤</button>
+                    <button class="tool-btn" title="Attach Image" onclick="document.getElementById('imageInput').click()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    </button>
+                    <button class="tool-btn" title="Attach File" onclick="document.getElementById('fileInput').click()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                    </button>
+                    <button class="tool-btn" title="Record Audio" onclick="handleAudio()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"></path></svg>
+                    </button>
                 </div>
                 <div class="input-box">
-                    <textarea id="input" placeholder="Message SuperBot..." rows="1"></textarea>
+                    <textarea id="input" placeholder="Message NexorAI..." rows="1"></textarea>
                 </div>
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- Modals -->
     <div class="modal" id="proModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('proModal')">×</button>
             <h2>Upgrade to Pro</h2>
-            <p style="color: #888; margin: 12px 0;">Unlock premium features and enhance your experience</p>
+            <p style="color: #888; font-size: 14px;">Unlock premium features and enhance your experience</p>
             <div class="pro-features">
-                <div class="feature-card">
-                    <div class="icon">🚀</div>
-                    <h3>GPT-4 Access</h3>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">💾</div>
-                    <h3>Chat History</h3>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">📁</div>
-                    <h3>File Analysis</h3>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">🔍</div>
-                    <h3>Advanced Search</h3>
-                </div>
+                <div class="feature-card"><span style="font-size: 18px;">🚀</span> GPT-4 Access</div>
+                <div class="feature-card"><span style="font-size: 18px;">💾</span> Unlimited Chat History</div>
+                <div class="feature-card"><span style="font-size: 18px;">📊</span> File Analysis</div>
+                <div class="feature-card"><span style="font-size: 18px;">🔍</span> Advanced Search</div>
             </div>
-            <button class="pro-btn" style="width: 100%; justify-content: center;" onclick="purchasePro()">
+            <button class="pro-btn" style="width: 100%; justify-content: center; padding: 12px; border-radius: 8px; background: #fff; color: #000; font-weight: 600;" onclick="purchasePro()">
                 Purchase Pro - $9.99/month
             </button>
         </div>
     </div>
 
     <div class="modal" id="historyModal">
-        <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-content">
             <button class="modal-close" onclick="closeModal('historyModal')">×</button>
             <h2>Chat History</h2>
-            <input type="text" id="searchHistory" placeholder="Search conversations...">
+            <input type="text" class="search-box" id="searchHistory" placeholder="Search conversations...">
             <div id="historyList"></div>
         </div>
     </div>
 
     <input type="file" id="imageInput" accept="image/*" onchange="handleFileUpload(this, 'image')">
-    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.csv,.xlsx"
-        onchange="handleFileUpload(this, 'file')">
+    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.csv,.xlsx" onchange="handleFileUpload(this, 'file')">
 
     <script>
-        const token = localStorage.getItem('token');
-        if (!token || token === 'undefined' || token === 'null') {
-            localStorage.removeItem('token'); // Clear corrupted token
-            window.location.href = '/';
+        // Check if token exists, but don't redirect to / to avoid infinite loops since we are ON /
+        const signedInUser = localStorage.getItem('nexoraiUser');
+        if (!signedInUser) {
+            window.location.href = '/login';
         }
 
         let attachments = [];
         let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
-        let isPro = localStorage.getItem('isPro') === 'true';
+        let isPro = false;
         let isRecording = false;
 
-        // Auto logout if the token is completely expired, or just manually clear it and redirect
+        // Theme management
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            updateThemeIcon(true);
+        }
+
+        function toggleTheme() {
+            const isLight = document.body.classList.toggle('light-theme');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcon(isLight);
+        }
+
+        function updateThemeIcon(isLight) {
+            const icon = document.getElementById('themeIcon');
+            if (isLight) {
+                // Sun icon for light mode (click to go dark)
+                icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+            } else {
+                // Moon icon for dark mode (click to go light)
+                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+            }
+        }
+
         function logout() {
-            localStorage.removeItem('token');
-            window.location.href = '/';
+            localStorage.removeItem('nexoraiUser');
+            window.location.href = '/login';
         }
 
         function updateProButton() {
             const proBtn = document.getElementById('proBtn');
             if (isPro) {
-                proBtn.innerHTML = '<span>⭐ Pro Active</span>';
-                proBtn.style.background = 'rgba(102, 126, 234, 0.2)';
-                proBtn.style.border = '1px solid rgba(102, 126, 234, 0.5)';
+                proBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span>Pro Active</span>';
+                proBtn.style.background = '#1A1A1A';
+                proBtn.style.color = '#FFF';
             }
         }
-
         updateProButton();
 
         function sendSuggestion(text) {
@@ -973,9 +682,7 @@
 
         function appendMessage(sender, text, attachmentData = null) {
             const welcomeScreen = document.getElementById('welcomeScreen');
-            if (welcomeScreen) {
-                welcomeScreen.remove();
-            }
+            if (welcomeScreen) welcomeScreen.remove();
 
             const chat = document.getElementById('chat');
             const messageDiv = document.createElement('div');
@@ -983,7 +690,9 @@
 
             const avatar = document.createElement('div');
             avatar.className = 'avatar';
-            avatar.textContent = sender === 'user' ? '👤' : '🤖';
+            avatar.innerHTML = sender === 'user' ? 
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>' : 
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>';
 
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
@@ -991,11 +700,10 @@
 
             if (attachmentData) {
                 const attachmentDiv = document.createElement('div');
-                attachmentDiv.className = 'attachment-preview';
-                attachmentDiv.innerHTML = `
-                    <span class="icon">${attachmentData.icon}</span>
-                    <span>${attachmentData.name}</span>
-                `;
+                attachmentDiv.className = 'attachment-chip';
+                attachmentDiv.style.marginTop = '8px';
+                attachmentDiv.style.display = 'inline-flex';
+                attachmentDiv.innerHTML = `<span>${attachmentData.icon}</span><span>${attachmentData.name}</span>`;
                 contentDiv.appendChild(attachmentDiv);
             }
 
@@ -1011,13 +719,9 @@
             typingDiv.className = 'message bot';
             typingDiv.id = 'typing';
             typingDiv.innerHTML = `
-                <div class="avatar">🤖</div>
+                <div class="avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg></div>
                 <div class="message-content">
-                    <div class="typing-indicator">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
+                    <div class="typing-indicator"><span></span><span></span><span></span></div>
                 </div>
             `;
             chat.appendChild(typingDiv);
@@ -1032,15 +736,11 @@
         async function sendMessage() {
             const input = document.getElementById('input');
             const message = input.value.trim();
-
             if (!message && attachments.length === 0) return;
 
             let attachmentData = null;
             if (attachments.length > 0) {
-                attachmentData = {
-                    icon: attachments[0].icon,
-                    name: attachments[0].name
-                };
+                attachmentData = { icon: attachments[0].icon, name: attachments[0].name };
             }
 
             appendMessage('user', message || 'Sent an attachment', attachmentData);
@@ -1048,7 +748,6 @@
             input.style.height = 'auto';
             attachments = [];
             document.getElementById('attachmentsBar').innerHTML = '';
-
             showTyping();
 
             try {
@@ -1056,13 +755,11 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ message })
                 });
 
                 if (res.status === 401 || res.status === 403) {
-                    // Unauthorized or token expired
                     logout();
                     return;
                 }
@@ -1072,16 +769,11 @@
                 const response = data.reply || data.error;
                 appendMessage('bot', response);
 
-                chatHistory.push({
-                    user: message,
-                    bot: response,
-                    timestamp: new Date().toISOString()
-                });
+                chatHistory.push({ user: message, bot: response, timestamp: new Date().toISOString() });
                 localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
             } catch (e) {
                 hideTyping();
                 appendMessage('bot', `Error: ${e.message || 'Connecting to server failed.'}`);
-                console.error('Chat error:', e);
             }
         }
 
@@ -1090,22 +782,11 @@
             if (!file) return;
 
             if (!isPro && type !== 'image') {
-                alert('File attachments are only available for Pro users. Please upgrade!');
+                alert('File attachments are only available for Pro users.');
                 input.value = '';
                 return;
             }
-
-            const icons = {
-                image: '🖼️',
-                file: '📄'
-            };
-
-            attachments.push({
-                name: file.name,
-                type: type,
-                icon: icons[type]
-            });
-
+            attachments.push({ name: file.name, type: type, icon: type === 'image' ? '🖼️' : '📄' });
             displayAttachments();
             input.value = '';
         }
@@ -1116,11 +797,7 @@
             attachments.forEach((att, index) => {
                 const chip = document.createElement('div');
                 chip.className = 'attachment-chip';
-                chip.innerHTML = `
-                    <span>${att.icon}</span>
-                    <span>${att.name}</span>
-                    <span class="remove" onclick="removeAttachment(${index})">×</span>
-                `;
+                chip.innerHTML = `<span>${att.icon}</span><span>${att.name}</span><span class="remove" onclick="removeAttachment(${index})">×</span>`;
                 bar.appendChild(chip);
             });
         }
@@ -1132,130 +809,59 @@
 
         function handleAudio() {
             if (!isPro) {
-                alert('Audio recording is only available for Pro users. Please upgrade!');
+                alert('Audio recording is only available for Pro users.');
                 return;
             }
-
-            if (!isRecording) {
-                isRecording = true;
-                alert('Recording started! (Demo feature)');
-            } else {
-                isRecording = false;
-                alert('Recording stopped! (Demo feature)');
-            }
+            isRecording = !isRecording;
+            alert(isRecording ? 'Recording started!' : 'Recording stopped!');
         }
 
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         function purchasePro() {
-            alert('This is a demo! In production, this would redirect to payment.');
-            isPro = true;
-            localStorage.setItem('isPro', 'true');
-            updateProButton();
             closeModal('proModal');
-            appendMessage('bot', '🎉 Welcome to Pro! You now have access to all premium features including GPT-4, file attachments, and chat history.');
+            appendMessage('bot', 'Premium plans are coming soon. Core chat is available now.');
         }
 
-        function displayHistory() {
+        function displayHistory(filter = '') {
             const list = document.getElementById('historyList');
             list.innerHTML = '';
-
-            if (chatHistory.length === 0) {
-                list.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No chat history yet</p>';
-                return;
-            }
-
-            chatHistory.slice().reverse().forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'suggestion-card';
-                div.style.marginBottom = '12px';
-                div.innerHTML = `
-                    <h3 style="color: #667eea; margin-bottom: 8px;">${item.user.substring(0, 60)}${item.user.length > 60 ? '...' : ''}</h3>
-                    <p style="color: #888;">${item.bot.substring(0, 100)}${item.bot.length > 100 ? '...' : ''}</p>
-                `;
-                div.onclick = () => {
-                    document.getElementById('input').value = item.user;
-                    closeModal('historyModal');
-                };
-                list.appendChild(div);
-            });
-        }
-
-        document.getElementById('proBtn').onclick = () => {
-            if (isPro) {
-                alert('You are already a Pro user!');
-            } else {
-                openModal('proModal');
-            }
-        };
-
-        document.getElementById('historyBtn').onclick = () => {
-            if (!isPro) {
-                alert('Chat history is only available for Pro users. Please upgrade!');
-                return;
-            }
-            displayHistory();
-            openModal('historyModal');
-        };
-
-        document.getElementById('input').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        document.getElementById('input').addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-        });
-
-        document.getElementById('searchHistory').addEventListener('input', function () {
-            const searchTerm = this.value.toLowerCase();
-            const list = document.getElementById('historyList');
-            const filtered = chatHistory.filter(item =>
-                item.user.toLowerCase().includes(searchTerm) ||
-                item.bot.toLowerCase().includes(searchTerm)
+            const filtered = chatHistory.filter(item => 
+                item.user.toLowerCase().includes(filter) || item.bot.toLowerCase().includes(filter)
             );
 
-            list.innerHTML = '';
-
             if (filtered.length === 0) {
-                list.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No results found</p>';
+                list.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No results found</p>';
                 return;
             }
 
             filtered.reverse().forEach(item => {
                 const div = document.createElement('div');
-                div.className = 'suggestion-card';
-                div.style.marginBottom = '12px';
-                div.innerHTML = `
-                    <h3 style="color: #667eea; margin-bottom: 8px;">${item.user.substring(0, 60)}${item.user.length > 60 ? '...' : ''}</h3>
-                    <p style="color: #888;">${item.bot.substring(0, 100)}${item.bot.length > 100 ? '...' : ''}</p>
-                `;
+                div.className = 'history-item';
+                div.innerHTML = `<h3>${item.user}</h3><p>${item.bot}</p>`;
                 div.onclick = () => {
                     document.getElementById('input').value = item.user;
                     closeModal('historyModal');
                 };
                 list.appendChild(div);
             });
-        });
+        }
 
-        // Close modal when clicking outside
+        document.getElementById('proBtn').onclick = () => isPro ? alert('You are already a Pro user!') : openModal('proModal');
+        document.getElementById('historyBtn').onclick = () => { displayHistory(); openModal('historyModal'); };
+        
+        document.getElementById('input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        });
+        document.getElementById('input').addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+        document.getElementById('searchHistory').addEventListener('input', function() { displayHistory(this.value.toLowerCase()); });
+        
         document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
         });
     </script>
 </body>
-
 </html>

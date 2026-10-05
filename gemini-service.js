@@ -15,9 +15,9 @@ try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const candidateModels = [
         process.env.GEMINI_MODEL,
+        'gemini-2.5-flash',
         'gemini-2.0-flash',
-        'gemini-1.5-flash-latest',
-        'gemini-1.5-flash'
+        'gemini-1.5-flash-latest'
     ].filter(Boolean);
 
     // Pick the first candidate. If runtime API rejects it, we'll fall back in generateResponse.
