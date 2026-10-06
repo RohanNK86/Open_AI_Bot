@@ -1,527 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexorAI - Assistant Login</title>
+    <title>NexorAI — Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #000;
-            min-height: 100dvh;
+            font-family: 'Inter', sans-serif;
+            background: #060608;
+            color: #F0F0F2;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             overflow: hidden;
-            position: relative;
-            perspective: 1000px;
         }
 
-        /* 3D Code Text Background */
-        .code-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* Galaxy canvas background */
+        #galaxy-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        /* Radial vignette */
+        .vignette {
+            position: fixed;
+            inset: 0;
             z-index: 1;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transform-style: preserve-3d;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(6,6,8,0.85) 100%);
         }
 
-        .code-container {
-            position: relative;
-            width: 200%;
-            height: 200%;
-            transform: rotateX(60deg) rotateZ(-45deg);
-            transform-origin: center;
-        }
-
-        .code-line {
-            position: absolute;
-            color: #0ea5e9;
-            font-family: monospace;
-            font-size: 1.2rem;
-            white-space: nowrap;
-            opacity: 0.2;
-            text-shadow: 0 0 5px #0ea5e9, 0 0 10px #38bdf8;
-        }
-
-        /* The animated typing effect */
-        @keyframes typeCode {
-            to {
-                width: 100%;
-            }
-        }
-
-        /* Gradient Overlay for Depth */
-        .bg-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.9) 80%);
-            z-index: 2;
-        }
-
-        .container {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(25px);
-            border-radius: 24px;
-            padding: 40px;
-            width: 450px;
-            max-width: 90%;
-            box-shadow:
-                0 0 60px rgba(56, 189, 248, 0.2),
-                inset 0 0 40px rgba(56, 189, 248, 0.05);
-            border: 1px solid rgba(56, 189, 248, 0.3);
+        /* Auth Card */
+        .auth-card {
             position: relative;
             z-index: 10;
-            animation: floatContainer 6s ease-in-out infinite;
-            transform-style: preserve-3d;
-        }
-
-        @keyframes floatContainer {
-
-            0%,
-            100% {
-                transform: translateY(0px) rotateX(2deg);
-            }
-
-            50% {
-                transform: translateY(-15px) rotateX(-2deg);
-            }
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo h1 {
-            background: linear-gradient(135deg, #38bdf8, #0ea5e9, #06b6d4, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 38px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-            animation: titleGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            from {
-                filter: brightness(1) drop-shadow(0 0 5px rgba(56, 189, 248, 0.5));
-            }
-
-            to {
-                filter: brightness(1.2) drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
-            }
-        }
-
-        .logo p {
-            color: #94a3b8;
-            font-size: 15px;
-            margin-top: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        label {
-            display: block;
-            color: #cbd5e1;
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        input {
             width: 100%;
-            padding: 14px 18px;
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 12px;
-            color: #e2e8f0;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            outline: none;
+            max-width: 420px;
+            padding: 48px 40px;
+            background: rgba(15, 15, 20, 0.75);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        input:focus {
-            border-color: #38bdf8;
-            background: rgba(30, 41, 59, 0.8);
-            box-shadow:
-                0 0 15px rgba(56, 189, 248, 0.4),
-                inset 0 0 10px rgba(56, 189, 248, 0.1);
-            transform: translateZ(10px);
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        input::placeholder {
-            color: #64748b;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-3px) translateZ(15px);
-            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.6);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 25px 0;
-            color: #64748b;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .divider span {
-            padding: 0 15px;
-            font-size: 14px;
-        }
-
-
-        .success-message {
-            display: none;
-            text-align: center;
-            color: #10b981;
-            font-size: 14px;
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 8px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .error-message {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .btn-content {
+        /* Logo */
+        .logo-row {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            margin-bottom: 32px;
         }
-
-        .auth-switch {
-            display: flex;
-            gap: 8px;
-            margin: 0 0 24px;
-            padding: 5px;
-            border: 1px solid rgba(31, 174, 239, 0.35);
-            border-radius: 12px;
-        }
-
-        .auth-switch button {
-            flex: 1;
-            border: 0;
+        .logo-row-img {
+            width: 40px; height: 40px;
             border-radius: 8px;
-            padding: 11px;
-            color: #aebbd0;
-            background: transparent;
-            cursor: pointer;
-            font-weight: 600;
+            background: #000;
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-row-img img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+        }
+        .back-link {
+            position: fixed; top: 22px; left: 24px; z-index: 20;
+            display: inline-flex; align-items: center; gap: 7px;
+            color: rgba(255,255,255,0.45); text-decoration: none;
+            font-size: 14px; font-weight: 500; transition: color 0.2s;
+        }
+        .back-link:hover { color: rgba(255,255,255,0.85); }
+        .back-link svg { width:15px; height:15px; }
+        .logo-row .brand {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
         }
 
-        .auth-switch button.active {
-            color: #fff;
-            background: linear-gradient(135deg, #16a9e5, #7656eb);
+        /* Tab switcher */
+        .tab-switch {
+            display: flex;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 28px;
+        }
+        .tab-switch button {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
+            color: #7A7A8C;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .tab-switch button.active {
+            background: #FFF;
+            color: #000;
+        }
+
+        /* Google button */
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 13px;
+            background: #FFF;
+            color: #1F1F1F;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 24px;
+        }
+        .google-btn:hover { background: #F0F0F0; transform: translateY(-1px); }
+        .google-btn svg { flex-shrink: 0; }
+
+        /* Divider */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            color: #4A4A5A; font-size: 12px; margin-bottom: 24px;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1;
+            height: 1px; background: rgba(255,255,255,0.08);
+        }
+
+        /* Form */
+        .form-group { margin-bottom: 14px; }
+        label {
+            display: block; font-size: 13px;
+            color: #A0A0B0; margin-bottom: 6px; font-weight: 500;
+        }
+        input {
+            width: 100%; padding: 12px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            color: #F0F0F2;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s;
+        }
+        input:focus {
+            border-color: rgba(108,99,255,0.5);
+            background: rgba(108,99,255,0.05);
+            box-shadow: 0 0 0 3px rgba(108,99,255,0.1);
+        }
+        input::placeholder { color: #4A4A5A; }
+
+        /* Submit */
+        .submit-btn {
+            width: 100%; padding: 13px;
+            background: #FFF; color: #000;
+            border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600;
+            font-family: inherit; cursor: pointer;
+            transition: all 0.2s; margin-top: 6px;
+        }
+        .submit-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Switch */
+        .switch-row {
+            text-align: center; margin-top: 24px;
+            font-size: 13px; color: #7A7A8C;
+        }
+        .switch-row a {
+            color: #A09AF8; text-decoration: none;
+            font-weight: 500; cursor: pointer;
+        }
+        .switch-row a:hover { text-decoration: underline; }
+
+        /* Status messages */
+        .status-msg {
+            margin-top: 14px; padding: 12px 14px;
+            border-radius: 10px; font-size: 13px;
+            display: none; text-align: center;
+        }
+        .status-msg.error { background: rgba(239,68,68,0.1); color: #F87171; border: 1px solid rgba(239,68,68,0.2); display: block; }
+        .status-msg.success { background: rgba(16,185,129,0.1); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.2); display: block; }
+
+        .spinner {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(0,0,0,0.3);
+            border-top-color: #000;
+            border-radius: 50%;
+            display: none; animation: spin 0.7s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 520px) {
+            body {
+                align-items: flex-start;
+                overflow-y: auto;
+                padding: 76px 16px 24px;
+            }
+            .auth-card {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                padding: 32px 20px;
+                border-radius: 16px;
+            }
+            .back-link { top: 18px; left: 16px; }
+            .logo-row { margin-bottom: 24px; }
+            .logo-row .brand { font-size: 20px; }
+            .tab-switch { margin-bottom: 22px; }
+            .google-btn { margin-bottom: 20px; }
         }
     </style>
 </head>
-
 <body>
-    <!-- 3D Background setup -->
-    <div class="code-bg" id="codeBg">
-        <div class="code-container" id="codeContainer"></div>
-    </div>
-    <div class="bg-overlay"></div>
+    <div id="galaxy-bg"></div>
+    <div class="vignette"></div>
 
-    <div class="container">
-        <div class="logo">
-            <h1>NexorAI</h1>
-            <p>Enter the next generation of Intelligence</p>
+    <!-- Back to home -->
+    <a class="back-link" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back to Home
+    </a>
+
+    <div class="auth-card">
+        <!-- Logo -->
+        <div class="logo-row">
+            <div class="logo-row-img"><img src="/static/assets/NexorSplash.png" alt="NexorAI Logo"></div>
+            <span class="brand">NexorAI</span>
         </div>
 
-        <form id="loginForm">
-            <div class="auth-switch" role="tablist" aria-label="Authentication mode">
-                <button type="button" id="loginTab" class="active">Login</button>
-                <button type="button" id="signupTab">Sign Up</button>
-            </div>
-            <p id="authHint" style="text-align: center; color: #aebbd0; margin: -12px 0 20px;">
-                Already have an account? Enter your email and password.
-            </p>
+        <!-- Tab switch -->
+        <div class="tab-switch">
+            <button id="loginTab" class="active" onclick="setMode('login')">Sign In</button>
+            <button id="signupTab" onclick="setMode('signup')">Sign Up</button>
+        </div>
 
+        <!-- Google -->
+        <button class="google-btn" onclick="handleGoogle()">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <div class="divider"><span>or</span></div>
+
+        <!-- Form -->
+        <form id="authForm" onsubmit="handleSubmit(event)">
+            <div class="form-group" id="nameGroup" style="display:none;">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="Your full name">
+            </div>
             <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your full name" required minlength="2">
-                <span class="error-message" id="nameError">Please enter a valid name</span>
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="you@example.com">
             </div>
-
             <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
-                <span class="error-message" id="emailError">Please enter a valid email</span>
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="••••••••" minlength="8">
+            </div>
+            <div class="form-group" id="dobGroup" style="display:none;">
+                <label>Date of Birth</label>
+                <input type="date" id="dob">
             </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="At least 8 characters" required minlength="8">
-                <span class="error-message" id="passwordError">Use at least 8 characters</span>
-            </div>
-
-            <div class="form-group">
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" name="dob" required>
-                <span class="error-message" id="dobError">Please enter a valid Date of Birth</span>
-            </div>
-
-            <button type="submit" class="btn-submit">
-                <div class="btn-content">
-                    <span class="btn-text">Login</span>
-                    <div class="spinner"></div>
-                </div>
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Sign In</span>
+                <div class="spinner" id="spinner"></div>
             </button>
-
-
-
-            <div class="success-message" id="successMessage">
-                ✓ Connection Established! Redirecting to Core Matrix...
-            </div>
-            <div class="error-message" id="generalError" style="font-size: 14px; text-align: center; margin-top: 15px;">
-            </div>
         </form>
+
+        <div class="status-msg" id="statusMsg"></div>
+
+        <div class="switch-row">
+            <span id="switchText">Don't have an account?</span>&nbsp;
+            <a id="switchLink" onclick="setMode('signup')">Create one</a>
+        </div>
     </div>
 
+    <script type="module">
+        import { initGalaxy } from '/static/galaxy.js';
+        initGalaxy('galaxy-bg');
+    </script>
     <script>
-        // Redirect if already logged in
-        if (localStorage.getItem('nexoraiUser')) {
-            window.location.href = '/chatbot';
-        }
+        if (localStorage.getItem('nexoraiUser')) window.location.href = '/chatbot';
 
-        // Generate 3D Background Code Lines
-        const codeContainer = document.getElementById('codeContainer');
-        const codeSnippets = [
-            'function initializeAI() { return new NeuralNet(); }',
-            'const quantum = await QuantumComputer.execute();',
-            'matrix.multiply(tensor_weights).activate(ReLU);',
-            'while (intelligence < SINGULARITY) { learn(); }',
-            'if (user.connected) { syncData(); }',
-            'export const AIEngine = new TransformerModel();',
-            'byte[] payload = secureEncrypt(data, AES_256);',
-            'import { DeepLearning } from "@nexorai/core";'
-        ];
+        let mode = 'login';
 
-        for (let i = 0; i < 50; i++) {
-            const line = document.createElement('div');
-            line.className = 'code-line';
-            line.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+        window.setMode = function(m) {
+            mode = m;
+            const isSignup = m === 'signup';
+            document.getElementById('loginTab').classList.toggle('active', !isSignup);
+            document.getElementById('signupTab').classList.toggle('active', isSignup);
+            document.getElementById('nameGroup').style.display = isSignup ? 'block' : 'none';
+            document.getElementById('dobGroup').style.display = isSignup ? 'block' : 'none';
+            document.getElementById('name').required = isSignup;
+            document.getElementById('dob').required = isSignup;
+            document.getElementById('btnText').textContent = isSignup ? 'Create Account' : 'Sign In';
+            document.getElementById('switchText').textContent = isSignup ? 'Already have an account?' : "Don't have an account?";
+            document.getElementById('switchLink').textContent = isSignup ? 'Sign in' : 'Create one';
+            document.getElementById('switchLink').onclick = () => setMode(isSignup ? 'login' : 'signup');
+            document.getElementById('statusMsg').className = 'status-msg';
+        };
 
-            // Random positioning
-            line.style.top = Math.random() * 100 + '%';
-            line.style.left = Math.random() * 50 + '%';
+        window.handleGoogle = function() {
+            showStatus('Google OAuth requires backend configuration. Use email/password for now.', 'error');
+        };
 
-            // 3D placement
-            const z = Math.random() * 400 - 200;
-            line.style.transform = `translateZ(${z}px)`;
-
-            // Animation
-            line.style.animation = `typeCode ${Math.random() * 10 + 5}s linear infinite`;
-            line.style.width = '0%';
-            line.style.overflow = 'hidden';
-
-            codeContainer.appendChild(line);
-        }
-
-        const form = document.getElementById('loginForm');
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const dobInput = document.getElementById('dob');
-        const submitBtn = form.querySelector('.btn-submit');
-        const spinner = form.querySelector('.spinner');
-        const btnText = form.querySelector('.btn-text');
-        const successMessage = document.getElementById('successMessage');
-        const generalError = document.getElementById('generalError');
-        const authHint = document.getElementById('authHint');
-        const loginTab = document.getElementById('loginTab');
-        const signupTab = document.getElementById('signupTab');
-        let authMode = 'login';
-
-        function setAuthMode(mode) {
-            authMode = mode;
-            const isSignup = mode === 'signup';
-            loginTab.classList.toggle('active', !isSignup);
-            signupTab.classList.toggle('active', isSignup);
-            nameInput.closest('.form-group').style.display = isSignup ? 'block' : 'none';
-            dobInput.closest('.form-group').style.display = isSignup ? 'block' : 'none';
-            nameInput.required = isSignup;
-            dobInput.required = isSignup;
-            btnText.textContent = isSignup ? 'Create Account' : 'Login';
-            authHint.textContent = isSignup
-                ? 'New to NexorAI? Create your account in the Login collection.'
-                : 'Already have an account? Enter your email and password.';
-            successMessage.textContent = isSignup
-                ? '✓ Account created! Redirecting to NexorAI...'
-                : '✓ Login successful! Redirecting to NexorAI...';
-            generalError.style.display = 'none';
-        }
-
-        loginTab.addEventListener('click', () => setAuthMode('login'));
-        signupTab.addEventListener('click', () => setAuthMode('signup'));
-        setAuthMode('login');
-
-        form.addEventListener('submit', async (e) => {
+        window.handleSubmit = async function(e) {
             e.preventDefault();
-            document.querySelectorAll('.error-message').forEach(msg => msg.style.display = 'none');
-
-            let isValid = true;
-            if (authMode === 'signup' && nameInput.value.trim().length < 2) {
-                document.getElementById('nameError').style.display = 'block';
-                isValid = false;
-            }
-            if (!emailInput.validity.valid) {
-                document.getElementById('emailError').style.display = 'block';
-                isValid = false;
-            }
-            if (passwordInput.value.length < 8) {
-                document.getElementById('passwordError').style.display = 'block';
-                isValid = false;
-            }
-            if (authMode === 'signup' && !dobInput.value) {
-                document.getElementById('dobError').style.display = 'block';
-                isValid = false;
-            }
-            if (!isValid) return;
-
+            const btn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('spinner');
+            const btnText = document.getElementById('btnText');
+            
+            btn.disabled = true;
             btnText.style.display = 'none';
             spinner.style.display = 'block';
-            submitBtn.disabled = true;
+            document.getElementById('statusMsg').className = 'status-msg';
+
+            const payload = mode === 'login'
+                ? { email: document.getElementById('email').value, password: document.getElementById('password').value }
+                : { name: document.getElementById('name').value, email: document.getElementById('email').value, password: document.getElementById('password').value, DOB: document.getElementById('dob').value };
 
             try {
-                const response = await fetch(`/users/${authMode === 'signup' ? 'signup' : 'login'}`, {
+                const res = await fetch(mode === 'login' ? '/users/login' : '/users/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(authMode === 'signup'
-                        ? {
-                            name: nameInput.value.trim(),
-                            email: emailInput.value.trim(),
-                            password: passwordInput.value,
-                            DOB: dobInput.value
-                        }
-                        : {
-                            email: emailInput.value.trim(),
-                            password: passwordInput.value
-                        })
+                    body: JSON.stringify(payload)
                 });
-
-                let data;
-                const contentType = response.headers.get('content-type') || '';
-                if (contentType.includes('application/json')) {
-                    data = await response.json();
-                } else {
-                    const text = await response.text();
-                    data = { message: text || `Request failed with status ${response.status}` };
-                }
-
-                if (!response.ok) {
-                    throw new Error(data.message || 'Authentication Failed');
-                }
-
-                localStorage.setItem('nexoraiUser', JSON.stringify(data.data.user));
-
-                spinner.style.display = 'none';
-                btnText.textContent = 'Access Granted!';
+                let data = {};
+                try { data = await res.json(); } catch(err) {}
+                if (!res.ok) throw new Error(data.message || data.error || 'Authentication failed');
+                localStorage.setItem('nexoraiUser', JSON.stringify(data.data?.user || { email: payload.email }));
+                showStatus('Success! Redirecting…', 'success');
+                setTimeout(() => window.location.href = '/chatbot', 1000);
+            } catch(err) {
+                showStatus(err.message, 'error');
+                btn.disabled = false;
                 btnText.style.display = 'block';
-                successMessage.style.display = 'block';
-
-                setTimeout(() => {
-                    window.location.href = '/chatbot';
-                }, 1500);
-
-            } catch (error) {
                 spinner.style.display = 'none';
-                btnText.style.display = 'block';
-                submitBtn.disabled = false;
-                generalError.textContent = error.message || 'Authentication service is currently unavailable.';
-                generalError.style.display = 'block';
             }
-        });
+        };
 
+        function showStatus(msg, type) {
+            const el = document.getElementById('statusMsg');
+            el.textContent = msg;
+            el.className = `status-msg ${type}`;
+        }
     </script>
 </body>
-
 </html>

@@ -63,7 +63,9 @@ const getUserId = (req, res, next) => {
     next();
 };
 
-app.get('/', (req, res) => res.redirect('/login'));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates', 'landing.html'));
+});
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'templates', 'login.html'));
 });
