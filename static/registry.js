@@ -8,7 +8,18 @@ export const MODEL_REGISTRY = [
         available: true,
         proOnly: false,
         integrated: true,
-        icon: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M12,22.5c-0.3,0-0.5-0.1-0.7-0.3c-2.3-2.6-4.9-4.8-7.7-6.5C3.3,15.5,3,15.2,3,14.8c0-0.4,0.3-0.8,0.7-0.9 c2.8-1.7,5.4-3.9,7.7-6.5c0.3-0.4,1-0.4,1.3,0c2.3,2.6,4.9,4.8,7.7,6.5c0.4,0.2,0.7,0.5,0.7,0.9c0,0.4-0.3,0.7-0.7,0.9 c-2.8,1.7-5.4,3.9-7.7,6.5C12.5,22.4,12.3,22.5,12,22.5z"/></svg>`
+        icon: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M12,22.5c-0.3,0-0.5-0.1-0.7-0.3c-2.3-2.6-4.9-4.8-7.7-6.5C3.3,15.5,3,15.2,3,14.8c0-0.4,0.3-0.8,0.7-0.9c2.8-1.7,5.4-3.9,7.7-6.5c0.3-0.4,1-0.4,1.3,0c2.3,2.6,4.9,3.9,7.7,6.5c0.4,0.2,0.7,0.5,0.7,0.9c0,0.4-0.3,0.7-0.7,0.9c-2.8,1.7-4.9,3.9-7.7,6.5C12.5,22.4,12.3,22.5,12,22.5z"/></svg>`
+    },
+    {
+        id: 'grok-ai',
+        displayName: 'Grok AI',
+        provider: 'xAI',
+        description: 'Conversational intelligence with a direct, curious style.',
+        capabilities: ['Text', 'Code', 'Reasoning'],
+        available: false,
+        proOnly: false,
+        integrated: false,
+        icon: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M20.4 4.6a1 1 0 0 0-1.4 0l-7.6 7.6-2.1-2.1a1 1 0 1 0-1.4 1.4l2.8 2.8a1 1 0 0 0 1.4 0L20.4 6a1 1 0 0 0 0-1.4ZM5.2 5.2A6.8 6.8 0 1 0 12 2.4a1 1 0 1 0 0 2 4.8 4.8 0 1 1-4.8 4.8 1 1 0 0 0-2 0 6.8 6.8 0 0 0 0 0Z"/></svg>`
     },
     {
         id: 'claude-sonnet',
@@ -27,10 +38,21 @@ export const MODEL_REGISTRY = [
         provider: 'NVIDIA',
         description: 'High-performance AI model optimized for complex workloads.',
         capabilities: ['Text', 'Code'],
+        available: true,
+        proOnly: false,
+        integrated: true,
+        icon: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M12.986 4.706V2.32H6.551v19.467h6.435V9.453H11.59v10.518H8.384V4.706h4.602zM17.433 2.32h-3.415v19.467h3.415V2.32z"/></svg>`
+    },
+    {
+        id: 'chatgpt',
+        displayName: 'ChatGPT',
+        provider: 'OpenAI',
+        description: 'Fast, versatile AI for writing, reasoning, and coding.',
+        capabilities: ['Text', 'Code', 'Reasoning'],
         available: false,
         proOnly: false,
         integrated: false,
-        icon: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M12.986 4.706V2.32H6.551v19.467h6.435V9.453H11.59v10.518H8.384V4.706h4.602zM17.433 2.32h-3.415v19.467h3.415V2.32z"/></svg>`
+        icon: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M21.3 10.2a5.7 5.7 0 0 0-5.5-4.3A5.7 5.7 0 0 0 5.2 8.2a5.7 5.7 0 0 0 1.1 8.1 5.7 5.7 0 0 0 5.5 4.3 5.7 5.7 0 0 0 5.6-2.3 5.7 5.7 0 0 0 3.9-8.1Z"/></svg>`
     },
     {
         id: 'kimi',

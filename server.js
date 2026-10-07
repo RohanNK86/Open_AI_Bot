@@ -75,15 +75,19 @@ app.get('/chatbot', (req, res) => {
 
 app.post('/api/chat', getUserId, async (req, res) => {
     try {
-        const { message } = req.body;
+        const { message, model } = req.body;
         if (!message || typeof message !== 'string' || !message.trim()) {
             return res.status(400).json({ error: 'Message is required' });
         }
-        const response = await generateResponse(req.userId, message);
+        const selectedModel = model || 'gemini-flash';
+        if (!['gemini-flash', 'nemotron'].includes(selectedModel)) {
+            return res.status(400).json({ error: 'Selected model is not available.' });
+        }
+        const response = await generateResponse(req.userId, message.trim(), selectedModel);
         res.json({ reply: response });
     } catch (error) {
         console.error('Chat API Error:', error);
-        res.status(500).json({ error: 'Internal server error', message: error.message });
+        res.status(502).json({ error: error.message || 'AI provider request failed' });
     }
 });
 
@@ -111,5 +115,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });

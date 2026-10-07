@@ -17,6 +17,7 @@ npm install
 
 Create the root `.env` from [.env.example](./.env.example) and `backend/.env` from [backend/.env.example](./backend/.env.example).
 The backend uses the MongoDB database `Users` and stores user records in the `login` collection. The current local login flow does not issue JWTs; authentication state is kept in the browser until JWT support is intentionally added later.
+The frontend routes Gemini Flash requests to Gemini, NVIDIA Nemotron requests to OpenRouter, and ChatGPT requests to OpenRouter using the configured model ID. The ChatGPT selection uses `OPEN_ROUTER_OPEN_API_KEYS` and `OPEN_ROUTER_OPEN_AI_MODEL_ID`, with `poolside/laguna-s-2.1:free` as the example model, a 1,024-token response limit, and a 9-second timeout by default for fast replies. Change `OPEN_ROUTER_OPEN_AI_MODEL_ID` in `.env` to switch models. An optional `OPEN_ROUTER_OPEN_AI_FALLBACK_MODEL_ID` is tried automatically when the selected model returns HTTP 429.
 
 ### Terminal 1: frontend gateway
 

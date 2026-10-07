@@ -183,7 +183,7 @@
     <div class="orrery-wrap">
         <canvas id="orrery"></canvas>
     </div>
-    <p class="kimi-note">+ Moonshot AI Kimi — Coming Soon</p>
+    <p class="kimi-note">+ Moonshot AI Kimi · Grok AI — Coming Soon</p>
 </section>
 
 <!-- FEATURES -->
@@ -192,7 +192,7 @@
         <p class="section-label" style="text-align:center;">Why NexorAI</p>
         <h2 class="section-title" style="text-align:center;">Everything you need, in one space</h2>
         <div class="features-grid">
-            <div class="feat-card"><div class="feat-icon" style="background:rgba(108,99,255,0.15)">🧠</div><h3>Multi-Model Freedom</h3><p>Switch seamlessly between leading AI providers — Gemini, Claude, Llama — without leaving your workspace.</p></div>
+            <div class="feat-card"><div class="feat-icon" style="background:rgba(108,99,255,0.15)">🧠</div><h3>Multi-Model Freedom</h3><p>Switch seamlessly between leading AI providers — Gemini, Grok AI, Claude, and Llama — without leaving your workspace.</p></div>
             <div class="feat-card"><div class="feat-icon" style="background:rgba(56,189,248,0.15)">⚡</div><h3>Lightning Responses</h3><p>Powered by Gemini Flash for real-time, intelligent conversations with persistent context across sessions.</p></div>
             <div class="feat-card"><div class="feat-icon" style="background:rgba(16,185,129,0.15)">💻</div><h3>Code & Debug</h3><p>Advanced syntax highlighting, smart code explanations, and step-by-step debugging assistance.</p></div>
             <div class="feat-card"><div class="feat-icon" style="background:rgba(245,158,11,0.15)">🔬</div><h3>Deep Research</h3><p>Long-context reasoning for complex research workflows, document analysis, and structured outputs.</p></div>
@@ -262,7 +262,9 @@
         claude: '/static/assets/claude.png',
         meta:   '/static/assets/meta.png',
         gemini: '/static/assets/gemini.png',
-        nvidia: '/static/assets/nvdia.jpg'
+        nvidia: '/static/assets/nvdia.jpg',
+        openai: '/static/assets/openai.jpg',
+        grok:   '/static/assets/groak.webp'
     };
     const IMGS = {};
     let loaded = 0;
@@ -281,7 +283,9 @@
         { key:'claude', name:'Claude Sonnet',   sub:'Anthropic',  avail:false, orbit:0.18, speed:0.42, angle:0.0,  border:'#E5894A', logoWhiteBg:true  },
         { key:'meta',   name:'Meta Llama',       sub:'Meta',       avail:false, orbit:0.34, speed:0.27, angle:2.1,  border:'#1877F2', logoWhiteBg:true  },
         { key:'gemini', name:'Gemini Flash',     sub:'Google',     avail:true,  orbit:0.50, speed:0.17, angle:4.6,  border:'#7C6AFA', logoWhiteBg:false },
-        { key:'nvidia', name:'NVIDIA Nemotron',  sub:'NVIDIA',     avail:false, orbit:0.66, speed:0.10, angle:1.4,  border:'#76B900', logoWhiteBg:true  },
+        { key:'nvidia', name:'NVIDIA Nemotron', sub:'NVIDIA', avail:true, orbit:0.66, speed:0.10, angle:1.4, border:'#76B900', logoWhiteBg:true  },
+        { key:'openai', name:'ChatGPT',          sub:'OpenAI',  avail:true, orbit:0.76, speed:0.085, angle:5.2, border:'#10A37F', logoWhiteBg:true  },
+        { key:'grok',   name:'Grok AI',           sub:'xAI',        avail:false, orbit:0.82, speed:0.07, angle:3.2,  border:'#E5E7EB', logoWhiteBg:true  },
     ];
 
     /* ---------- Main loop ---------- */
